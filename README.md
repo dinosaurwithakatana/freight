@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 ```
 
 Using the "shipper"
+---
 
 ```java
 public class MainController extends Controller{
