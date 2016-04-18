@@ -12,7 +12,7 @@ import javax.lang.model.util.Elements
 import javax.tools.Diagnostic
 
 @AutoService(value = Processor::class)
-public open class FreightProcessor : AbstractProcessor() {
+open class FreightProcessor : AbstractProcessor() {
 
   private lateinit var filer: Filer
   private lateinit var messager: Messager
@@ -31,7 +31,8 @@ public open class FreightProcessor : AbstractProcessor() {
   override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
 
     if (annotations.isNotEmpty()) {
-      val targetClassMap = hashMapOf<TypeElement, FreightTrainBindingClass>()
+      val freightTrainTargetClassMap = hashMapOf<TypeElement, FreightTrainBindingClass>()
+      val builderTargetClassMap = hashMapOf<TypeElement, BuilderBindingClass>()
       val erasedTargetNames = mutableSetOf<String>()
 
       annotations.forEach {
@@ -45,15 +46,19 @@ public open class FreightProcessor : AbstractProcessor() {
                     }
 
                     val enclosingElement = it.enclosingElement as TypeElement
-                    val shipperClass = getOrCreateShipper(targetClassMap, enclosingElement, erasedTargetNames)
-                    shipperClass.createAndAddFreightTrainBinding(it)
+                    val shipperClass = getOrCreateFreightTrain(freightTrainTargetClassMap, enclosingElement, erasedTargetNames)
+                    shipperClass.createAndAddBinding(it)
+
+                    val builderClass = getOrCreateBuilder(builderTargetClassMap, enclosingElement, erasedTargetNames)
+                    builderClass.createAndAddBinding(it)
                   } catch (e: Exception) {
 
                   }
                 }
       }
 
-      targetClassMap.values
+      freightTrainTargetClassMap.values
+              .plus(builderTargetClassMap.values)
               .forEach {
                 try {
                   it.writeToFiler(filer)
@@ -66,27 +71,45 @@ public open class FreightProcessor : AbstractProcessor() {
     return true
   }
 
-  private fun getOrCreateShipper(targetClassMap: MutableMap<TypeElement, FreightTrainBindingClass>,
-                                 enclosingElement: TypeElement,
-                                 erasedTargetNames: MutableSet<String>): FreightTrainBindingClass {
-    var shipperClass = targetClassMap[enclosingElement]
-    if (shipperClass == null) {
+  private fun getOrCreateFreightTrain(targetClassMap: MutableMap<TypeElement, FreightTrainBindingClass>,
+                                      enclosingElement: TypeElement,
+                                      erasedTargetNames: MutableSet<String>)
+          : FreightTrainBindingClass {
+    var freightTrainClass = targetClassMap[enclosingElement]
+    if (freightTrainClass == null) {
       val targetClass = enclosingElement.qualifiedName.toString()
       val classPackage = enclosingElement.packageName(elementUtils)
       val className = enclosingElement.className(classPackage) + FreightTrainBindingClass.CLASS_SUFFIX
-      shipperClass = FreightTrainBindingClass(classPackage, className, targetClass, processingEnv)
-      targetClassMap.put(enclosingElement, shipperClass)
+      freightTrainClass = FreightTrainBindingClass(classPackage, className, targetClass, processingEnv)
+      targetClassMap.put(enclosingElement, freightTrainClass)
       erasedTargetNames.add(enclosingElement.toString())
     }
 
-    return shipperClass
+    return freightTrainClass
+  }
+
+  private fun getOrCreateBuilder(targetClassMap: MutableMap<TypeElement, BuilderBindingClass>,
+                                 enclosingElement: TypeElement,
+                                 erasedTargetNames: MutableSet<String>)
+          : BuilderBindingClass {
+    var builderClass = targetClassMap[enclosingElement]
+    if (builderClass == null) {
+      val targetClass = enclosingElement.qualifiedName.toString()
+      val classPackage = enclosingElement.packageName(elementUtils)
+      val className = enclosingElement.className(classPackage) + BuilderBindingClass.CLASS_SUFFIX
+      builderClass = BuilderBindingClass(classPackage, className, targetClass, processingEnv)
+      targetClassMap.put(enclosingElement, builderClass)
+      erasedTargetNames.add(enclosingElement.toString())
+    }
+
+    return builderClass
   }
 
   private fun error(element: Element, message: String, vararg args: Any) {
     messager.printMessage(Diagnostic.Kind.ERROR, String.format(message, args), element)
   }
 
-  private fun note(note : String){
+  private fun note(note: String) {
     messager.printMessage(Diagnostic.Kind.NOTE, note)
   }
 }

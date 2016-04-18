@@ -24,6 +24,10 @@ public class MainController extends Controller{
   @Extra short testShortExtra;
   @Extra("BooleanExtraYo") boolean testBooleanExtra;
 
+  public MainController(Bundle args) {
+    super(args);
+  }
+
   @NonNull
   @Override
   protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
