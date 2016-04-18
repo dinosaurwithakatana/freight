@@ -31,7 +31,7 @@ public open class FreightProcessor : AbstractProcessor() {
   override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
 
     if (annotations.isNotEmpty()) {
-      val targetClassMap = hashMapOf<TypeElement, ShipperBindingClass>()
+      val targetClassMap = hashMapOf<TypeElement, FreightTrainBindingClass>()
       val erasedTargetNames = mutableSetOf<String>()
 
       annotations.forEach {
@@ -46,7 +46,7 @@ public open class FreightProcessor : AbstractProcessor() {
 
                     val enclosingElement = it.enclosingElement as TypeElement
                     val shipperClass = getOrCreateShipper(targetClassMap, enclosingElement, erasedTargetNames)
-                    shipperClass.createAndAddShippingBinding(it)
+                    shipperClass.createAndAddFreightTrainBinding(it)
                   } catch (e: Exception) {
 
                   }
@@ -66,15 +66,15 @@ public open class FreightProcessor : AbstractProcessor() {
     return true
   }
 
-  private fun getOrCreateShipper(targetClassMap: MutableMap<TypeElement, ShipperBindingClass>,
+  private fun getOrCreateShipper(targetClassMap: MutableMap<TypeElement, FreightTrainBindingClass>,
                                  enclosingElement: TypeElement,
-                                 erasedTargetNames: MutableSet<String>): ShipperBindingClass {
+                                 erasedTargetNames: MutableSet<String>): FreightTrainBindingClass {
     var shipperClass = targetClassMap[enclosingElement]
     if (shipperClass == null) {
       val targetClass = enclosingElement.qualifiedName.toString()
       val classPackage = enclosingElement.packageName(elementUtils)
-      val className = enclosingElement.className(classPackage) + ShipperBindingClass.CLASS_SUFFIX
-      shipperClass = ShipperBindingClass(classPackage, className, targetClass, processingEnv)
+      val className = enclosingElement.className(classPackage) + FreightTrainBindingClass.CLASS_SUFFIX
+      shipperClass = FreightTrainBindingClass(classPackage, className, targetClass, processingEnv)
       targetClassMap.put(enclosingElement, shipperClass)
       erasedTargetNames.add(enclosingElement.toString())
     }
