@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     router = Conductor.attachRouter(this, container, savedInstanceState);
     if(!router.hasRootController()){
       router.setRoot(new MainControllerBuilder()
-              .testBooleanExtra(false)
+              .booleanExtraYo(false)
               .testStringExtra("Yeah this is a string")
               .testIntExtra(1)
               .build());
@@ -36,7 +36,7 @@ Using the "shipper"
 public class MainController extends Controller{
   @Extra String testStringExtra;
   @Extra int testIntExtra;
-  @Extra("BooleanExtraYo") boolean testBooleanExtra;
+  @Extra("booleanExtraYo") boolean testBooleanExtra;
 
   public MainController(Bundle args) {
     super(args);
@@ -45,11 +45,13 @@ public class MainController extends Controller{
   @NonNull
   @Override
   protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
+    View view = inflater.inflate(R.layout.controller_main, container, false);
     Freight.ship(this);
-    return null;
+    return view;
   }
 }
 ```
+
 Acknowledgements
 --
 
