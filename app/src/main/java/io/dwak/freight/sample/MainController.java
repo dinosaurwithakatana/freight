@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.Controller;
 
+import java.util.Date;
+
 import io.dwak.Extra;
 import io.dwak.freight.Freight;
 
@@ -22,7 +24,13 @@ public class MainController extends Controller{
   @Extra float testFloat;
   @Extra IBinder testIBinderExtra;
   @Extra short testShortExtra;
-  @Extra("BooleanExtraYo") boolean testBooleanExtra;
+  @Extra("booleanExtraYo") boolean testBooleanExtra;
+  @Extra ParcelableModel testParcelable;
+  @Extra Date testSerializable;
+  @Extra float[] testFloatArray;
+  @Extra char[] testCharArray;
+  @Extra byte[] testByteArray;
+  @Extra CharSequence[] testCharSequenceArray;
 
   public MainController(Bundle args) {
     super(args);
@@ -32,6 +40,7 @@ public class MainController extends Controller{
   @Override
   protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
     Freight.ship(this);
+
     return null;
   }
 }

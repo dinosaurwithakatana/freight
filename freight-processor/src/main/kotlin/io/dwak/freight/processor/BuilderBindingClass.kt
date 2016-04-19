@@ -1,7 +1,6 @@
 package io.dwak.freight.processor
 
 import com.squareup.javapoet.AnnotationSpec
-import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
 import com.vishnurajeevan.javapoet.dsl.classType
@@ -38,37 +37,26 @@ class BuilderBindingClass(classPackage: String,
       bindings.values
               .forEach {
                 method(setOf(PUBLIC, FINAL),
-                       ClassName.get(classPackage, className),
-                       it.name,
-                       setOf(JavaPoetValue(FINAL, TypeName.get(it.type), "value"))){
+                       generatedClassName,
+                       it.builderMethodName,
+                       setOf(JavaPoetValue(FINAL, TypeName.get(it.type), "value"))) {
 
-                  statement(getBundleStatement(it, "value"))
+                  statement(getBundleStatement(it, "value").second)
                   statement("return this")
                 }
               }
 
-      method(setOf(PUBLIC, FINAL), targetClassName , "build") {
+      method(setOf(PUBLIC, FINAL), targetClassName, "build") {
         statement("return new \$T(bundle)", targetClassName)
       }
 
     }
   }
 
-  fun getBundleStatement(it: FieldBinding, param : String): String {
-    var bundleStatement = ""
-    when (TypeName.get(it.type)) {
-      string       -> bundleStatement = "bundle.putString(\"${it.key}\", $param)"
-      charsequence -> bundleStatement = "bundle.putCharSequence(\"${it.key}\", $param)"
-      integer      -> bundleStatement = "bundle.putInt(\"${it.key}\", $param)"
-      float        -> bundleStatement = "bundle.putFloat(\"${it.key}\", $param)"
-      character    -> bundleStatement = "bundle.putChar(\"${it.key}\", $param)"
-      bundle       -> bundleStatement = "bundle.putBundle(\"${it.key}\", $param)"
-      iBinder      -> bundleStatement = "bundle.putBinder(\"${it.key}\", $param)"
-      byte         -> bundleStatement = "bundle.putByte(\"${it.key}\", $param)"
-      short        -> bundleStatement = "bundle.putShort(\"${it.key}\", $param)"
-      boolean      -> bundleStatement = "bundle.putBoolean(\"${it.key}\", $param)"
-    }
-
-    return bundleStatement
+  fun getBundleStatement(fieldBinding: FieldBinding, param: String): Pair<Boolean, String> {
+    return handleType(fieldBinding, {
+      "bundle.put$it(\"${fieldBinding.key}\", $param)"
+    })
   }
+
 }

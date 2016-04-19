@@ -7,7 +7,8 @@ import javax.lang.model.type.TypeMirror
 class FieldBinding(element: Element) {
   internal val name: String
   internal val type: TypeMirror
-  internal var key: String? = null
+  internal var key: String
+  internal var builderMethodName: String
 
   init {
     val instance = element.getAnnotation(Extra::class.java)
@@ -15,10 +16,13 @@ class FieldBinding(element: Element) {
     type = element.asType()
     if (instance.value.isNotEmpty()) {
       key = instance.value
+      builderMethodName = key
     }
     else {
       key = name.toUpperCase()
+      builderMethodName = name
     }
+
   }
 
 }
