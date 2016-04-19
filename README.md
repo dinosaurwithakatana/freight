@@ -5,7 +5,7 @@ Use this to ship data between `Controller` instances when you're using [Conducto
 
 
 
-Using the `Freight`
+Using `Freight`
 -------------------
 
 ```java
