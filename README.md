@@ -4,6 +4,30 @@ Freight
 Use this to ship data between `Controller` instances when you're using [Conductor](https://github.com/bluelinelabs/Conductor)
 
 
+
+Using the `Freight`
+-------------------
+
+```java
+public class MainController extends Controller{
+  @Extra String testStringExtra;
+  @Extra int testIntExtra;
+  @Extra("booleanExtraYo") boolean testBooleanExtra;
+
+  public MainController(Bundle args) {
+    super(args);
+  }
+
+  @NonNull
+  @Override
+  protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
+    View view = inflater.inflate(R.layout.controller_main, container, false);
+    Freight.ship(this);
+    return view;
+  }
+}
+```
+
 Using the builder
 ---
 
@@ -25,29 +49,6 @@ public class MainActivity extends AppCompatActivity {
               .testIntExtra(1)
               .build());
     }
-  }
-}
-```
-
-Using the "shipper"
----
-
-```java
-public class MainController extends Controller{
-  @Extra String testStringExtra;
-  @Extra int testIntExtra;
-  @Extra("booleanExtraYo") boolean testBooleanExtra;
-
-  public MainController(Bundle args) {
-    super(args);
-  }
-
-  @NonNull
-  @Override
-  protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-    View view = inflater.inflate(R.layout.controller_main, container, false);
-    Freight.ship(this);
-    return view;
   }
 }
 ```
