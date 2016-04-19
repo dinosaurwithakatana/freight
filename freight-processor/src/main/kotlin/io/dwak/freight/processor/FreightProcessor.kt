@@ -6,7 +6,6 @@ import java.io.IOException
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.Element
-import javax.lang.model.element.ElementKind
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
 import javax.tools.Diagnostic
@@ -40,11 +39,6 @@ open class FreightProcessor : AbstractProcessor() {
         roundEnv.getElementsAnnotatedWith(typeElement)
                 .forEach {
                   try {
-                    if (it.kind != ElementKind.FIELD) {
-                      error(it, "Extra can only be applied to fields!")
-                      return false
-                    }
-
                     val enclosingElement = it.enclosingElement as TypeElement
                     val shipperClass = getOrCreateFreightTrain(freightTrainTargetClassMap, enclosingElement, erasedTargetNames)
                     shipperClass.createAndAddBinding(it)

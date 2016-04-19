@@ -31,6 +31,7 @@ public class MainController extends Controller{
   @Extra char[] testCharArray;
   @Extra byte[] testByteArray;
   @Extra CharSequence[] testCharSequenceArray;
+  private String myStringExtra;
 
   public MainController(Bundle args) {
     super(args);
@@ -42,5 +43,10 @@ public class MainController extends Controller{
     Freight.ship(this);
 
     return null;
+  }
+
+  @Extra
+  void setMyStringExtra(String myStringExtra){
+    this.myStringExtra = myStringExtra;
   }
 }

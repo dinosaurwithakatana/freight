@@ -36,10 +36,11 @@ class BuilderBindingClass(classPackage: String,
 
       bindings.values
               .forEach {
+                val parameterType = JavaPoetValue(FINAL, TypeName.get(it.type), "value")
                 method(setOf(PUBLIC, FINAL),
                        generatedClassName,
                        it.builderMethodName,
-                       setOf(JavaPoetValue(FINAL, TypeName.get(it.type), "value"))) {
+                       setOf(parameterType)) {
 
                   statement(getBundleStatement(it, "value").second)
                   statement("return this")
