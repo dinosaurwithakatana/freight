@@ -20,5 +20,6 @@ android {
 
 dependencies {
     compile project(':freight-annotations')
-    testCompile 'junit:junit:4.12'
 }
+
+apply from: '../gradle-mvn-push.gradle'

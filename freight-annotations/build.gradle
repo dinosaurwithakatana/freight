@@ -5,3 +5,5 @@ targetCompatibility = JavaVersion.VERSION_1_7
 
 dependencies {
 }
+
+apply from: '../gradle-mvn-push.gradle'
