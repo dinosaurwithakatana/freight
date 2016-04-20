@@ -53,6 +53,26 @@ public class MainActivity extends AppCompatActivity {
 }
 ```
 
+Setup
+------------
+```groovy
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+    }
+}
+
+apply plugin: 'com.neenbedankt.android-apt'
+
+dependencies {
+    apt 'io.dwak:freight-processor:0.1-SNAPSHOT'
+    compile 'io.dwak:freight:0.1-SNAPSHOT'
+}
+```
+
 Acknowledgements
 --
 
