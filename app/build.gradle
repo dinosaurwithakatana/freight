@@ -21,8 +21,10 @@ android {
 }
 
 dependencies {
-    compile project(':freight')
-    apt project(':freight-processor')
+    //compile project(':freight')
+    //apt project(':freight-processor')
+    compile 'io.dwak:freight:0.1-SNAPSHOT'
+    apt 'io.dwak:freight-processor:0.1-SNAPSHOT'
     compile 'com.bluelinelabs:conductor:1.1.4'
 
     testCompile 'junit:junit:4.12'

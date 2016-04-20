@@ -58,7 +58,7 @@ Setup
 ```groovy
 buildscript {
     repositories {
-        mavenCentral()
+        maven {url "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
     dependencies {
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
