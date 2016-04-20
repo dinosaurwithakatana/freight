@@ -26,7 +26,7 @@ dependencies {
     compile 'com.google.android:android:4.1.1.4'
     compile 'com.google.auto.service:auto-service:1.0-rc2'
     compile 'com.squareup:javapoet:1.6.1'
-    compile 'com.github.burntcookie90:javapoet-kotlin-dsl:cf6916a'
+    compile 'io.dwak:javapoet-kotlin-dsl:0.1-SNAPSHOT'
 }
 
 
