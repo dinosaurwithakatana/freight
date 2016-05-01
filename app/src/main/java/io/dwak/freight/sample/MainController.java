@@ -2,6 +2,7 @@ package io.dwak.freight.sample;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +21,12 @@ public class MainController extends Controller{
   @Extra Bundle testBundleExtra;
   @Extra byte testByteExtra;
   @Extra CharSequence testCharSequenceExtra;
-  @Extra float testFloat;
+  @Nullable @Extra float testFloat;
   @Extra short testShortExtra;
   @Extra("booleanExtraYo") boolean testBooleanExtra;
   @Extra ParcelableModel testParcelable;
   @Extra Date testSerializable;
-  @Extra float[] testFloatArray;
+  @Nullable @Extra float[] testFloatArray;
   @Extra char[] testCharArray;
   @Extra byte[] testByteArray;
   @Extra CharSequence[] testCharSequenceArray;

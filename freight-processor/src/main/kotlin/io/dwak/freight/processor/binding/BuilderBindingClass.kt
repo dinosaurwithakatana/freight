@@ -23,6 +23,7 @@ class BuilderBindingClass(classPackage: String,
 
   override fun createAndAddBinding(element: Element) {
     val binding = FieldBinding(element)
+    note(binding.toString())
     bindings.put(binding.name, binding)
   }
 
@@ -65,11 +66,15 @@ class BuilderBindingClass(classPackage: String,
     var arrayString = "{"
     bindings.values
             .take(bindings.values.size - 1)
+            .filter { it.isRequired }
             .forEach {
               arrayString += "\"${it.builderMethodName}\""
               arrayString += ",\n"
             }
-    arrayString += "\"${bindings.values.last().builderMethodName}\""
+    val last = bindings.values.last()
+    if(last.isRequired) {
+      arrayString += "\"${last.builderMethodName}\""
+    }
     arrayString += "}"
     hasRequiredAnnotationBuilder.addMember("value", "\$L", arrayString);
     return hasRequiredAnnotationBuilder.build()

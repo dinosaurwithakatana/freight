@@ -1,6 +1,7 @@
 package io.dwak.freight.processor.model
 
 import io.dwak.Extra
+import io.dwak.freight.processor.extension.hasAnnotationWithName
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.ExecutableElement
@@ -12,9 +13,10 @@ class FieldBinding(element: Element) {
   internal val key: String
   internal val builderMethodName: String
   internal val kind: ElementKind
+  internal val isRequired: Boolean
 
   init {
-    val instance = element.getAnnotation(Extra::class.java)
+    val extraInstance = element.getAnnotation(Extra::class.java)
     kind = element.kind
     name = element.simpleName.toString()
 
@@ -25,8 +27,8 @@ class FieldBinding(element: Element) {
       (element as ExecutableElement).parameters[0].asType()
     }
 
-    if (instance.value.isNotEmpty()) {
-      key = instance.value
+    if (extraInstance.value.isNotEmpty()) {
+      key = extraInstance.value
       builderMethodName = key
     }
     else {
@@ -34,6 +36,18 @@ class FieldBinding(element: Element) {
       builderMethodName = name
     }
 
+    isRequired = !element.hasAnnotationWithName("Nullable")
   }
+
+  override fun toString(): String {
+    @Suppress("ConvertToStringTemplate")
+    return "FieldBinding(builderMethodName='$builderMethodName', " +
+            "name='$name', " +
+            "type=$type, " +
+            "key='$key', " +
+            "kind=$kind, " +
+            "isRequired=$isRequired)"
+  }
+
 
 }

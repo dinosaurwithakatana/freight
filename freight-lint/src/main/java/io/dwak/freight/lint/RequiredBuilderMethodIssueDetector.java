@@ -46,6 +46,10 @@ public class RequiredBuilderMethodIssueDetector
     JavaParser.ResolvedNode resolvedNode = context.resolve(node);
     if (resolvedNode instanceof JavaParser.ResolvedMethod) {
       JavaParser.ResolvedMethod resolvedMethod = (JavaParser.ResolvedMethod) resolvedNode;
+      if(resolvedMethod.getAnnotation(HAS_REQUIRED_METHODS_ANNOTATION) == null){
+        //this isn't our `build()` method
+        return;
+      }
       List<String> requiredMethods = Arrays.asList((String[]) resolvedMethod
               .getAnnotation(HAS_REQUIRED_METHODS_ANNOTATION)
               .getValue());
