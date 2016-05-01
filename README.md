@@ -11,7 +11,7 @@ Using `Freight`
 ```java
 public class MainController extends Controller{
   @Extra String testStringExtra;
-  @Extra int testIntExtra;
+  @Nullable @Extra int testIntExtra; //Fields annotated with @Nullable are optional
   @Extra("booleanExtraYo") boolean testBooleanExtra;
 
   public MainController(Bundle args) {
@@ -52,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
   }
 }
 ```
+
+There is a lint check bundled with the API artifact that will verify you've called all required builder methods.
 
 Setup
 ------------
