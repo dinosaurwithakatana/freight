@@ -9,6 +9,7 @@ Using `Freight`
 -------------------
 
 ```java
+@ControllerBuilder //This will generate a builder
 public class MainController extends Controller{
   @Extra String testStringExtra;
   @Nullable @Extra int testIntExtra; //Fields annotated with @Nullable are optional

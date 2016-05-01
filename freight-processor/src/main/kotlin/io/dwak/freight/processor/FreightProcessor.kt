@@ -1,6 +1,7 @@
 package io.dwak.freight.processor
 
 import com.google.auto.service.AutoService
+import io.dwak.ControllerBuilder
 import io.dwak.Extra
 import io.dwak.freight.processor.binding.BuilderBindingClass
 import io.dwak.freight.processor.binding.FreightTrainBindingClass
@@ -31,7 +32,8 @@ open class FreightProcessor : AbstractProcessor() {
   override fun getSupportedAnnotationTypes() = mutableSetOf(Extra::class.java.canonicalName)
   override fun getSupportedSourceVersion() = SourceVersion.latestSupported()
 
-  override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
+  override fun process(annotations: MutableSet<out TypeElement>,
+                       roundEnv: RoundEnvironment): Boolean {
 
     if (annotations.isNotEmpty()) {
       val freightTrainTargetClassMap = hashMapOf<TypeElement, FreightTrainBindingClass>()
@@ -43,12 +45,18 @@ open class FreightProcessor : AbstractProcessor() {
         roundEnv.getElementsAnnotatedWith(typeElement)
                 .forEach {
                   try {
-                    val enclosingElement = it.enclosingElement as TypeElement
-                    val shipperClass = getOrCreateFreightTrain(freightTrainTargetClassMap, enclosingElement, erasedTargetNames)
+                    val enclosingTypeElement = it.enclosingElement as TypeElement
+                    val shipperClass = getOrCreateFreightTrain(freightTrainTargetClassMap,
+                                                               enclosingTypeElement,
+                                                               erasedTargetNames)
                     shipperClass.createAndAddBinding(it)
 
-                    val builderClass = getOrCreateBuilder(builderTargetClassMap, enclosingElement, erasedTargetNames)
-                    builderClass.createAndAddBinding(it)
+                    if (it.enclosingElement.getAnnotation(ControllerBuilder::class.java) != null) {
+                      val builderClass = getOrCreateBuilder(builderTargetClassMap,
+                                                            enclosingTypeElement,
+                                                            erasedTargetNames)
+                      builderClass.createAndAddBinding(it)
+                    }
                   } catch (e: Exception) {
 
                   }

@@ -9,8 +9,10 @@ import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.Controller;
 
+import io.dwak.ControllerBuilder;
 import io.dwak.Extra;
 
+@ControllerBuilder
 public class SecondController extends Controller  {
   @Extra int integerExtra;
   @Nullable @Extra
