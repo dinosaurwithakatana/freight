@@ -1,0 +1,28 @@
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'java'
+
+configurations {
+    lintChecks
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7
+
+dependencies {
+    compile rootProject.ext.lintapi
+    compile rootProject.ext.lintchecks
+
+    lintChecks files(jar)
+}
+
+jar {
+    manifest {
+        attributes('Lint-Registry': 'io.dwak.freight.lint.IssueRegistry')
+    }
+}
+
+
+apply from: '../gradle-mvn-push.gradle'

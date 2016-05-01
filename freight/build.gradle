@@ -18,8 +18,26 @@ android {
     }
 }
 
+configurations {
+    lintChecks
+}
+
 dependencies {
     compile project(':freight-annotations')
+    lintChecks project(path: ':freight-lint', configuration: 'lintChecks')
+    provided rootProject.ext.conductor
+}
+
+task copyLintJar(type: Copy) {
+    from(configurations.lintChecks) {
+        rename { 'lint.jar' }
+    }
+    into 'build/intermediates/lint/'
+}
+
+project.afterEvaluate {
+    def compileLintTask = project.tasks.find { it.name == 'compileLint' }
+    compileLintTask.dependsOn(copyLintJar)
 }
 
 apply from: '../gradle-mvn-push.gradle'

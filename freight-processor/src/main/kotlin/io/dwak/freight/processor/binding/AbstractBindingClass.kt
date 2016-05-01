@@ -1,6 +1,8 @@
-package io.dwak.freight.processor
+package io.dwak.freight.processor.binding
 
 import com.squareup.javapoet.*
+import io.dwak.freight.processor.model.FieldBinding
+import io.dwak.freight.processor.extension.getTypeMirror
 import java.io.IOException
 import javax.annotation.processing.Filer
 import javax.annotation.processing.Messager

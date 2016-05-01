@@ -1,7 +1,6 @@
 package io.dwak.freight.sample;
 
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +21,6 @@ public class MainController extends Controller{
   @Extra byte testByteExtra;
   @Extra CharSequence testCharSequenceExtra;
   @Extra float testFloat;
-  @Extra IBinder testIBinderExtra;
   @Extra short testShortExtra;
   @Extra("booleanExtraYo") boolean testBooleanExtra;
   @Extra ParcelableModel testParcelable;

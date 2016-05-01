@@ -18,11 +18,8 @@ public class MainActivity extends AppCompatActivity {
 
     router = Conductor.attachRouter(this, container, savedInstanceState);
     if(!router.hasRootController()){
-      router.setRoot(new MainControllerBuilder()
-              .booleanExtraYo(false)
-              .testStringExtra("Yeah this is a string")
-              .testIntExtra(1)
-              .build());
+
+      new SecondControllerBuilder().integerExtra(1).build();
     }
   }
 }

@@ -5,6 +5,8 @@ import android.util.Log;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import io.dwak.freight.internal.IFreightTrain;
+
 public final class Freight {
   private static final String TAG = "Freight";
   private static final String SUFFIX = "$$FreightTrain";

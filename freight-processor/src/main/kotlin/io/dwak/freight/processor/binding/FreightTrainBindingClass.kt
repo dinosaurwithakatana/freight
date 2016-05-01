@@ -1,9 +1,10 @@
-package io.dwak.freight.processor
+package io.dwak.freight.processor.binding
 
 import com.squareup.javapoet.*
 import com.squareup.javapoet.TypeName.VOID
 import com.vishnurajeevan.javapoet.dsl.classType
 import com.vishnurajeevan.javapoet.dsl.model.JavaPoetValue
+import io.dwak.freight.processor.model.FieldBinding
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
@@ -32,7 +33,7 @@ class FreightTrainBindingClass(classPackage: String,
                                   .addMember("value", "\$S", "unused")
                                   .build())
       parameterizedTypes.add(TypeVariableName.get("T", ClassName.get(classPackage, targetClass)))
-      implements.add(ParameterizedTypeName.get(ClassName.get("io.dwak.freight", "IFreightTrain"),
+      implements.add(ParameterizedTypeName.get(ClassName.get("io.dwak.freight.internal", "IFreightTrain"),
                                                TypeVariableName.get("T")))
 
       method(PUBLIC, VOID, METHOD_NAME,
@@ -46,7 +47,7 @@ class FreightTrainBindingClass(classPackage: String,
 
         bindings.values.forEach {
           val bundlePair = getBundleStatement(it)
-          if(it.kind == ElementKind.FIELD) {
+          if (it.kind == ElementKind.FIELD) {
             if (!bundlePair.first) {
               statement("target.\$L = (\$L) bundle.getSerializable(\"${it.key}\")", it.name, it.type)
             }

@@ -1,4 +1,4 @@
-package io.dwak.freight.processor
+package io.dwak.freight.processor.extension
 
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements

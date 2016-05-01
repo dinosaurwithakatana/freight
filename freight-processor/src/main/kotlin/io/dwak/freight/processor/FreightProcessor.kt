@@ -2,6 +2,10 @@ package io.dwak.freight.processor
 
 import com.google.auto.service.AutoService
 import io.dwak.Extra
+import io.dwak.freight.processor.binding.BuilderBindingClass
+import io.dwak.freight.processor.binding.FreightTrainBindingClass
+import io.dwak.freight.processor.extension.className
+import io.dwak.freight.processor.extension.packageName
 import java.io.IOException
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
