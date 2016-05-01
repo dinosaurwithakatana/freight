@@ -23,7 +23,6 @@ class BuilderBindingClass(classPackage: String,
 
   override fun createAndAddBinding(element: Element) {
     val binding = FieldBinding(element)
-    note(binding.toString())
     bindings.put(binding.name, binding)
   }
 

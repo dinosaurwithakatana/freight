@@ -57,7 +57,6 @@ public class RequiredBuilderMethodIssueDetector
       String methodChainString = "";
       for (Node node1 : node.getChildren()) {
         methodChainString += node1.toString();
-        context.log(null, methodChainString);
       }
       for (String requiredMethod : requiredMethods) {
         if(methodChainString.contains(requiredMethod)){
