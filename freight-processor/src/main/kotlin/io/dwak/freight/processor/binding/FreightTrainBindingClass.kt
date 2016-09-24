@@ -46,21 +46,21 @@ class FreightTrainBindingClass(classPackage: String,
 
 
         bindings.values.forEach {
-          val bundlePair = getBundleStatement(it)
+          val (typeHandled, statement) = getBundleStatement(it)
           if (it.kind == ElementKind.FIELD) {
-            if (!bundlePair.first) {
+            if (!typeHandled) {
               statement("target.\$L = (\$L) bundle.getSerializable(\"${it.key}\")", it.name, it.type)
             }
             else {
-              statement("target.\$L = \$L", it.name, getBundleStatement(it).second)
+              statement("target.\$L = \$L", it.name, statement)
             }
           }
           else {
-            if (!bundlePair.first) {
+            if (!typeHandled) {
               statement("target.\$L((\$L) bundle.getSerializable(\"${it.key}\"))", it.name, it.type)
             }
             else {
-              statement("target.\$L(\$L)", it.name, getBundleStatement(it).second)
+              statement("target.\$L(\$L)", it.name, statement)
             }
           }
         }
@@ -70,7 +70,16 @@ class FreightTrainBindingClass(classPackage: String,
 
   private fun getBundleStatement(fieldBinding: FieldBinding): Pair<Boolean, String> {
     return handleType(fieldBinding, {
-      "bundle.get$it(\"${fieldBinding.key}\")"
+      var statement = ""
+      if(!fieldBinding.isRequired){
+        statement += "bundle.containsKey(\"${fieldBinding.key}\") ? "
+      }
+      statement +="bundle.get$it(\"${fieldBinding.key}\")"
+
+      if(!fieldBinding.isRequired){
+        statement += ": null"
+      }
+      statement
     })
   }
 }

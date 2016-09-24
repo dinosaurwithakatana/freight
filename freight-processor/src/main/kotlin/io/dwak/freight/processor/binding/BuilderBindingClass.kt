@@ -50,8 +50,7 @@ class BuilderBindingClass(classPackage: String,
               }
 
       method(setOf(PUBLIC, FINAL), targetClassName, "build") {
-        val hasRequiredAnnotation = generateHasRequiredMethodsAnnotation()
-        annotations = setOf(hasRequiredAnnotation)
+        annotations = setOf(generateHasRequiredMethodsAnnotation())
         statement("return new \$T(bundle)", targetClassName)
       }
 
@@ -64,8 +63,8 @@ class BuilderBindingClass(classPackage: String,
     val hasRequiredAnnotationBuilder = AnnotationSpec.builder(hasRequiredMethodAnnotation)
     var arrayString = "{"
     bindings.values
-            .take(bindings.values.size - 1)
             .filter { it.isRequired }
+            .take(bindings.values.size - 1)
             .forEach {
               arrayString += "\"${it.builderMethodName}\""
               arrayString += ",\n"
@@ -79,7 +78,7 @@ class BuilderBindingClass(classPackage: String,
     return hasRequiredAnnotationBuilder.build()
   }
 
-  fun getBundleStatement(fieldBinding: FieldBinding, param: String): Pair<Boolean, String> {
+  private fun getBundleStatement(fieldBinding: FieldBinding, param: String): Pair<Boolean, String> {
     return handleType(fieldBinding, {
       "bundle.put$it(\"${fieldBinding.key}\", $param)"
     })

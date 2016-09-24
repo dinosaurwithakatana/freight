@@ -1,8 +1,8 @@
 package io.dwak.freight.processor.binding
 
 import com.squareup.javapoet.*
-import io.dwak.freight.processor.model.FieldBinding
 import io.dwak.freight.processor.extension.getTypeMirror
+import io.dwak.freight.processor.model.FieldBinding
 import java.io.IOException
 import javax.annotation.processing.Filer
 import javax.annotation.processing.Messager
@@ -16,23 +16,28 @@ abstract class AbstractBindingClass(val classPackage: String,
                                     val className: String,
                                     val targetClass: String,
                                     val processingEnvironment: ProcessingEnvironment) {
-
   val targetClassName = ClassName.get(classPackage, targetClass)
   val generatedClassName = ClassName.get(classPackage, className)
-  val parcelable = ClassName.get("android.os", "Parcelable")
-  val parcelableTypeMirror = processingEnvironment
-          .getTypeMirror("${parcelable.packageName()}.${parcelable.simpleName()}")
-  val serializableTypeMirror = processingEnvironment.getTypeMirror("java.io.Serializable")
-  val iBinder = ClassName.get("android.os", "IBinder")
-  val bundle = ClassName.get("android.os", "Bundle")
-  val charsequence = ClassName.get("java.lang", "CharSequence")
-  val string = ClassName.get("java.lang", "String")
+
   val integer = TypeName.INT
   val float = TypeName.FLOAT
   val character = TypeName.CHAR
   val byte = TypeName.BYTE
   val short = TypeName.SHORT
   val boolean = TypeName.BOOLEAN
+  val iBinder = ClassName.get("android.os", "IBinder")
+  val bundle = ClassName.get("android.os", "Bundle")
+  val charsequence = ClassName.get("java.lang", "CharSequence")
+  val string = ClassName.get("java.lang", "String")
+  val parcelable = ClassName.get("android.os", "Parcelable")
+  val arrayList = ClassName.get("java.util", "ArrayList")
+  val parcelableTypeMirror = processingEnvironment
+          .getTypeMirror("${parcelable.packageName()}.${parcelable.simpleName()}")
+  val serializableTypeMirror = processingEnvironment.getTypeMirror("java.io.Serializable")
+  val integerArrayList = ParameterizedTypeName.get(arrayList, TypeName.INT.box())
+  val stringArrayList = ParameterizedTypeName.get(arrayList, string)
+  val parcelableArrayList = ParameterizedTypeName.get(arrayList, parcelable)
+  val charSequenceArrayList = ParameterizedTypeName.get(arrayList, charsequence)
 
   private val messager: Messager by lazy { processingEnvironment.messager }
   protected val elementUtils: Elements by lazy { processingEnvironment.elementUtils }
@@ -58,7 +63,8 @@ abstract class AbstractBindingClass(val classPackage: String,
   protected fun handleType(it: FieldBinding, f: (String) -> String)
           : Pair<Boolean, String> {
 
-    var bundleStatement : String = ""
+    var bundleStatement: String = ""
+    note(TypeName.get(it.type).toString())
     when {
       TypeName.get(it.type) == string                         -> return Pair(true, f("String"))
       TypeName.get(it.type) == charsequence                   -> return Pair(true, f("CharSequence"))
@@ -74,6 +80,9 @@ abstract class AbstractBindingClass(val classPackage: String,
       TypeName.get(it.type) == ArrayTypeName.of(character)    -> return Pair(true, f("CharArray"))
       TypeName.get(it.type) == ArrayTypeName.of(byte)         -> return Pair(true, f("ByteArray"))
       TypeName.get(it.type) == ArrayTypeName.of(charsequence) -> return Pair(true, f("CharSequenceArray"))
+      TypeName.get(it.type) == integerArrayList               -> return Pair(true, f("IntegerArrayList"))
+      TypeName.get(it.type) == stringArrayList                -> return Pair(true, f("StringArrayList"))
+      TypeName.get(it.type) == charSequenceArrayList          -> return Pair(true, f("CharSequenceArrayList"))
       typeUtils.isAssignable(it.type,
                              parcelableTypeMirror)            -> return Pair(true, f("Parcelable"))
       typeUtils.isAssignable(it.type,

@@ -6,6 +6,7 @@ import io.dwak.Extra
 import io.dwak.freight.processor.binding.BuilderBindingClass
 import io.dwak.freight.processor.binding.FreightTrainBindingClass
 import io.dwak.freight.processor.extension.className
+import io.dwak.freight.processor.extension.hasAnnotationWithName
 import io.dwak.freight.processor.extension.packageName
 import java.io.IOException
 import javax.annotation.processing.*
@@ -43,6 +44,7 @@ open class FreightProcessor : AbstractProcessor() {
       annotations.forEach {
         typeElement: TypeElement ->
         roundEnv.getElementsAnnotatedWith(typeElement)
+                .filter { it.hasAnnotationWithName(Extra::class.java.simpleName) }
                 .forEach {
                   try {
                     val enclosingTypeElement = it.enclosingElement as TypeElement

@@ -9,12 +9,15 @@ import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.Controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 
+import io.dwak.ControllerBuilder;
 import io.dwak.Extra;
 import io.dwak.freight.Freight;
 
-public class MainController extends Controller{
+@ControllerBuilder
+public class MainController extends Controller {
   @Extra String testStringExtra;
   @Extra int testIntExtra;
   @Extra char testCharExtra;
@@ -30,6 +33,9 @@ public class MainController extends Controller{
   @Extra char[] testCharArray;
   @Extra byte[] testByteArray;
   @Extra CharSequence[] testCharSequenceArray;
+  @Extra ArrayList<Integer> testIntegerArrayList;
+  @Extra ArrayList<String> testStringArrayList;
+  @Extra ArrayList<CharSequence> testCharSequenceArrayList;
   private String myStringExtra;
 
   public MainController(Bundle args) {
@@ -44,8 +50,9 @@ public class MainController extends Controller{
     return null;
   }
 
+  @Nullable
   @Extra
-  void setMyStringExtra(String myStringExtra){
+  void setMyStringExtra(String myStringExtra) {
     this.myStringExtra = myStringExtra;
   }
 }

@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.0'
+        classpath 'com.android.tools.build:gradle:2.2.0'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -27,7 +27,7 @@ task clean(type: Delete) {
 ext {
     def lintVersion = '24.5.0'
 
-    conductor = "com.bluelinelabs:conductor:1.1.4"
+    conductor = "com.bluelinelabs:conductor:2.0.1"
 
     lintapi = "com.android.tools.lint:lint-api:$lintVersion"
     lintchecks = "com.android.tools.lint:lint-checks:$lintVersion"

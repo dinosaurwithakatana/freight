@@ -19,7 +19,6 @@ public class SecondController extends Controller  {
   String optionalStringExtra;
 
   public SecondController(Bundle args){
-
   }
 
   @NonNull
