@@ -54,6 +54,13 @@ class BuilderBindingClass(classPackage: String,
         statement("return new \$T(bundle)", targetClassName)
       }
 
+      val routerTransaction = ClassName.get("com.bluelinelabs.conductor", "RouterTransaction")
+
+      method(setOf(PUBLIC, FINAL), routerTransaction, "asTransaction"){
+        annotations = setOf(generateHasRequiredMethodsAnnotation())
+        statement("return \$T.with(build())", routerTransaction)
+      }
+
     }
   }
 
@@ -70,9 +77,10 @@ class BuilderBindingClass(classPackage: String,
               arrayString += ",\n"
             }
     val last = bindings.values.last()
-    if(last.isRequired) {
+    if(last.isRequired && !arrayString.contains(last.builderMethodName)) {
       arrayString += "\"${last.builderMethodName}\""
     }
+
     arrayString += "}"
     hasRequiredAnnotationBuilder.addMember("value", "\$L", arrayString);
     return hasRequiredAnnotationBuilder.build()

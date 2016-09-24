@@ -12,7 +12,6 @@ import com.android.tools.lint.detector.api.Speed;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import lombok.ast.AstVisitor;
@@ -38,7 +37,10 @@ public class RequiredBuilderMethodIssueDetector
 
   @Override
   public List<String> getApplicableMethodNames() {
-    return Collections.singletonList("build");
+    ArrayList<String> methods = new ArrayList<>();
+    methods.add("build");
+    methods.add("asTransaction");
+    return methods;
   }
 
   @Override
@@ -47,7 +49,11 @@ public class RequiredBuilderMethodIssueDetector
     if (resolvedNode instanceof JavaParser.ResolvedMethod) {
       JavaParser.ResolvedMethod resolvedMethod = (JavaParser.ResolvedMethod) resolvedNode;
       if(resolvedMethod.getAnnotation(HAS_REQUIRED_METHODS_ANNOTATION) == null){
-        //this isn't our `build()` method
+        //this isn't our method
+        return;
+      }
+      if(resolvedMethod.getContainingClass().getSimpleName().contains("ControllerBuilder")){
+        // We don't want to lint our gen'd class
         return;
       }
       List<String> requiredMethods = Arrays.asList((String[]) resolvedMethod

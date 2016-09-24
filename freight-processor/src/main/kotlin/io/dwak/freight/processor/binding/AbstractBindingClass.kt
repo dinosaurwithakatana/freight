@@ -52,10 +52,12 @@ abstract class AbstractBindingClass(val classPackage: String,
     JavaFile.builder(classPackage, generate()).build().writeTo(filer)
   }
 
+  @Suppress("unused")
   fun note(note: String) {
     messager.printMessage(Diagnostic.Kind.NOTE, note)
   }
 
+  @Suppress("unused")
   fun error(message: String) {
     messager.printMessage(Diagnostic.Kind.ERROR, message)
   }
@@ -64,7 +66,6 @@ abstract class AbstractBindingClass(val classPackage: String,
           : Pair<Boolean, String> {
 
     var bundleStatement: String = ""
-    note(TypeName.get(it.type).toString())
     when {
       TypeName.get(it.type) == string                         -> return Pair(true, f("String"))
       TypeName.get(it.type) == charsequence                   -> return Pair(true, f("CharSequence"))

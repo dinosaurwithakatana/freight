@@ -10,6 +10,7 @@ import com.bluelinelabs.conductor.Router;
 public class MainActivity extends AppCompatActivity {
 
   private Router router;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -17,11 +18,10 @@ public class MainActivity extends AppCompatActivity {
     ViewGroup container = (ViewGroup) findViewById(R.id.container);
 
     router = Conductor.attachRouter(this, container, savedInstanceState);
-    if(!router.hasRootController()){
-
-      new SecondControllerBuilder()
+    if (!router.hasRootController()) {
+      router.setRoot(new SecondControllerBuilder()
               .integerExtra(1)
-              .build();
+              .asTransaction());
     }
   }
 }
