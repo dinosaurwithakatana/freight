@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
               .booleanExtraYo(false)
               .testStringExtra("Yeah this is a string")
               .testIntExtra(1)
-              .build());
+              .asTransaction());
     }
   }
 }
@@ -71,8 +71,8 @@ buildscript {
 apply plugin: 'com.neenbedankt.android-apt'
 
 dependencies {
-    apt 'io.dwak:freight-processor:0.1-SNAPSHOT'
-    compile 'io.dwak:freight:0.1-SNAPSHOT'
+    apt 'io.dwak:freight-processor:0.2-SNAPSHOT'
+    compile 'io.dwak:freight:0.2-SNAPSHOT'
 }
 ```
 
