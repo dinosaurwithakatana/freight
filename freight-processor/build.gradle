@@ -24,7 +24,6 @@ dependencies {
     compile rootProject.ext.javaPoetDsl
     compileOnly files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
 
-    testCompile project(':freight')
     testCompile rootProject.ext.kotlin
     testCompile rootProject.ext.android
     testCompile rootProject.ext.conductor
