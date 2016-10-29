@@ -8,12 +8,12 @@ import javax.lang.model.element.Element
  */
 fun Element.hasAnnotationWithName(simpleName: String): Boolean {
   annotationMirrors.forEach {
-    val annotationElement = it.annotationType.asElement();
-    val annotationName = annotationElement.simpleName.toString();
+    val annotationElement = it.annotationType.asElement()
+    val annotationName = annotationElement.simpleName.toString()
     if (simpleName.equals(annotationName)) {
-      return true;
+      return true
     }
   }
-  return false;
+  return false
 }
 

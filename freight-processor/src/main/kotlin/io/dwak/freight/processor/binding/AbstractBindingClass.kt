@@ -65,7 +65,7 @@ abstract class AbstractBindingClass(val classPackage: String,
   protected fun handleType(it: FieldBinding, f: (String) -> String)
           : Pair<Boolean, String> {
 
-    var bundleStatement: String = ""
+    val bundleStatement: String = ""
     when {
       TypeName.get(it.type) == string                         -> return Pair(true, f("String"))
       TypeName.get(it.type) == charsequence                   -> return Pair(true, f("CharSequence"))

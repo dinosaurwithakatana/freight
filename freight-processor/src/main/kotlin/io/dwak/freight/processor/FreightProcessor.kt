@@ -113,10 +113,12 @@ open class FreightProcessor : AbstractProcessor() {
     return builderClass
   }
 
+  @Suppress("unused")
   private fun error(element: Element, message: String, vararg args: Any) {
     messager.printMessage(Diagnostic.Kind.ERROR, String.format(message, args), element)
   }
 
+  @Suppress("unused")
   private fun note(note: String) {
     messager.printMessage(Diagnostic.Kind.NOTE, note)
   }

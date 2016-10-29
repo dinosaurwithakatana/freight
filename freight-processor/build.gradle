@@ -1,32 +1,36 @@
-buildscript {
-    ext.kotlin_version = '1.0.4'
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
-
-repositories {
-    mavenCentral()
-}
-
 apply plugin: 'java'
 apply plugin: 'kotlin'
-
 
 sourceCompatibility = JavaVersion.VERSION_1_7
 targetCompatibility = JavaVersion.VERSION_1_7
 
 
+def logger = new com.android.build.gradle.internal.LoggerWrapper(project.logger)
+def sdkHandler = new com.android.build.gradle.internal.SdkHandler(project, logger)
+for (File file : sdkHandler.sdkLoader.repositories) {
+    repositories.maven {
+        url = file.toURI()
+    }
+}
+
+
 dependencies {
     compile project(':freight-annotations')
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile 'com.google.android:android:4.1.1.4'
-    compile 'com.google.auto.service:auto-service:1.0-rc2'
-    compile 'com.squareup:javapoet:1.6.1'
-    compile 'io.dwak:javapoet-kotlin-dsl:0.1-SNAPSHOT'
+
+    compile rootProject.ext.kotlin
+    compile rootProject.ext.android
+    compile rootProject.ext.autoService
+    compile rootProject.ext.javaPoet
+    compile rootProject.ext.javaPoetDsl
+    compileOnly files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
+
+    testCompile rootProject.ext.kotlin
+    testCompile rootProject.ext.android
+    testCompile rootProject.ext.conductor
+    testCompile rootProject.ext.compileTesting
+    testCompile rootProject.ext.junit
+    testCompile rootProject.ext.truth
+    testCompile files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
 }
 
 
