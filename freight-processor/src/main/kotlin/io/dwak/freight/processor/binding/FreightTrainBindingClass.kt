@@ -45,25 +45,27 @@ class FreightTrainBindingClass(classPackage: String,
         statement("final \$T bundle = target.getArgs()", bundle)
 
 
-        bindings.values.forEach {
-          val (typeHandled, statement) = getBundleStatement(it)
-          if (it.kind == ElementKind.FIELD) {
-            if (!typeHandled) {
-              statement("target.\$L = (\$L) bundle.getSerializable(\"${it.key}\")", it.name, it.type)
-            }
-            else {
-              statement("target.\$L = \$L", it.name, statement)
-            }
-          }
-          else {
-            if (!typeHandled) {
-              statement("target.\$L((\$L) bundle.getSerializable(\"${it.key}\"))", it.name, it.type)
-            }
-            else {
-              statement("target.\$L(\$L)", it.name, statement)
-            }
-          }
-        }
+        bindings.values
+                .map { it as FieldBinding }
+                .forEach {
+                  val (typeHandled, statement) = getBundleStatement(it)
+                  if (it.kind == ElementKind.FIELD) {
+                    if (!typeHandled) {
+                      statement("target.\$L = (\$L) bundle.getSerializable(\"${it.key}\")", it.name, it.type)
+                    }
+                    else {
+                      statement("target.\$L = \$L", it.name, statement)
+                    }
+                  }
+                  else {
+                    if (!typeHandled) {
+                      statement("target.\$L((\$L) bundle.getSerializable(\"${it.key}\"))", it.name, it.type)
+                    }
+                    else {
+                      statement("target.\$L(\$L)", it.name, statement)
+                    }
+                  }
+                }
       }
     }
   }
@@ -71,12 +73,12 @@ class FreightTrainBindingClass(classPackage: String,
   private fun getBundleStatement(fieldBinding: FieldBinding): Pair<Boolean, String> {
     return handleType(fieldBinding, {
       var statement = ""
-      if(!fieldBinding.isRequired){
+      if (!fieldBinding.isRequired) {
         statement += "bundle.containsKey(\"${fieldBinding.key}\") ? "
       }
-      statement +="bundle.get$it(\"${fieldBinding.key}\")"
+      statement += "bundle.get$it(\"${fieldBinding.key}\")"
 
-      if(!fieldBinding.isRequired){
+      if (!fieldBinding.isRequired) {
         statement += ": null"
       }
       statement
