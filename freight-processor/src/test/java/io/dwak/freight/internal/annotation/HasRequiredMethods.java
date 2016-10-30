@@ -1,11 +1,10 @@
-package io.dwak.freight.internal;
+package io.dwak.freight.internal.annotation;
 
 /**
  * STUB! Required for test sources to compile
- * @param <T>
  */
 @SuppressWarnings("unused")
-public interface IFreightTrain<T> {
+public @interface HasRequiredMethods {
   @SuppressWarnings("unused")
-  void ship(T target);
+  String[] value();
 }

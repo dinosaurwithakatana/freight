@@ -1,13 +1,14 @@
 package io.dwak.freight.processor
 
 import com.google.auto.service.AutoService
-import io.dwak.ControllerBuilder
-import io.dwak.Extra
+import io.dwak.freight.annotation.ControllerBuilder
+import io.dwak.freight.annotation.Extra
 import io.dwak.freight.processor.binding.BuilderBindingClass
 import io.dwak.freight.processor.binding.FreightTrainBindingClass
 import io.dwak.freight.processor.extension.className
 import io.dwak.freight.processor.extension.hasAnnotationWithName
 import io.dwak.freight.processor.extension.packageName
+import io.dwak.freight.processor.model.FieldBinding
 import java.io.IOException
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
@@ -30,7 +31,10 @@ open class FreightProcessor : AbstractProcessor() {
     this.elementUtils = processingEnv.elementUtils
   }
 
-  override fun getSupportedAnnotationTypes() = mutableSetOf(Extra::class.java.canonicalName)
+  override fun getSupportedAnnotationTypes()
+          = mutableSetOf(Extra::class.java.canonicalName,
+                         ControllerBuilder::class.java.canonicalName)
+
   override fun getSupportedSourceVersion() = SourceVersion.latestSupported()
 
   override fun process(annotations: MutableSet<out TypeElement>,
@@ -40,11 +44,11 @@ open class FreightProcessor : AbstractProcessor() {
       val freightTrainTargetClassMap = hashMapOf<TypeElement, FreightTrainBindingClass>()
       val builderTargetClassMap = hashMapOf<TypeElement, BuilderBindingClass>()
       val erasedTargetNames = mutableSetOf<String>()
-
       annotations.forEach {
         typeElement: TypeElement ->
-        roundEnv.getElementsAnnotatedWith(typeElement)
-                .filter { it.hasAnnotationWithName(Extra::class.java.simpleName) }
+        val elements = roundEnv.getElementsAnnotatedWith(typeElement)
+
+        elements.filter { it.hasAnnotationWithName(Extra::class.java.simpleName) }
                 .forEach {
                   try {
                     val enclosingTypeElement = it.enclosingElement as TypeElement
@@ -53,15 +57,24 @@ open class FreightProcessor : AbstractProcessor() {
                                                                erasedTargetNames)
                     shipperClass.createAndAddBinding(it)
 
-                    if (it.enclosingElement.getAnnotation(ControllerBuilder::class.java) != null) {
-                      val builderClass = getOrCreateBuilder(builderTargetClassMap,
-                                                            enclosingTypeElement,
-                                                            erasedTargetNames)
-                      builderClass.createAndAddBinding(it)
-                    }
                   } catch (e: Exception) {
 
                   }
+                }
+
+        elements.filter { it.hasAnnotationWithName(ControllerBuilder::class.java.simpleName) }
+                .forEach {
+                  val enclosedExtrasElements = arrayListOf<FieldBinding>()
+
+                  it.enclosedElements
+                          .filter { it.hasAnnotationWithName(Extra::class.java.simpleName) }
+                          .map(::FieldBinding)
+                          .forEach { enclosedExtrasElements.add(it) }
+
+                  val builderClass = getOrCreateBuilder(builderTargetClassMap,
+                                                        it as TypeElement,
+                                                        erasedTargetNames)
+                  builderClass.createAndAddBinding(it, enclosedExtrasElements)
                 }
       }
 
@@ -97,17 +110,17 @@ open class FreightProcessor : AbstractProcessor() {
   }
 
   private fun getOrCreateBuilder(targetClassMap: MutableMap<TypeElement, BuilderBindingClass>,
-                                 enclosingElement: TypeElement,
+                                 element: TypeElement,
                                  erasedTargetNames: MutableSet<String>)
           : BuilderBindingClass {
-    var builderClass = targetClassMap[enclosingElement]
+    var builderClass = targetClassMap[element]
     if (builderClass == null) {
-      val targetClass = enclosingElement.qualifiedName.toString()
-      val classPackage = enclosingElement.packageName(elementUtils)
-      val className = enclosingElement.className(classPackage) + BuilderBindingClass.CLASS_SUFFIX
+      val targetClass = element.qualifiedName.toString()
+      val classPackage = element.packageName(elementUtils)
+      val className = element.className(classPackage) + BuilderBindingClass.CLASS_SUFFIX
       builderClass = BuilderBindingClass(classPackage, className, targetClass, processingEnv)
-      targetClassMap.put(enclosingElement, builderClass)
-      erasedTargetNames.add(enclosingElement.toString())
+      targetClassMap.put(element, builderClass)
+      erasedTargetNames.add(element.toString())
     }
 
     return builderClass

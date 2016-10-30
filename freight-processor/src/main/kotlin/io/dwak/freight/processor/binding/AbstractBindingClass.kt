@@ -2,6 +2,7 @@ package io.dwak.freight.processor.binding
 
 import com.squareup.javapoet.*
 import io.dwak.freight.processor.extension.getTypeMirror
+import io.dwak.freight.processor.model.Binding
 import io.dwak.freight.processor.model.FieldBinding
 import java.io.IOException
 import javax.annotation.processing.Filer
@@ -44,10 +45,10 @@ abstract class AbstractBindingClass(val classPackage : String,
   val parcelableArrayList = ParameterizedTypeName.get(arrayList, parcelable)
   val charSequenceArrayList = ParameterizedTypeName.get(arrayList, charsequence)
 
-  private val messager : Messager by lazy { processingEnvironment.messager }
-  protected val elementUtils : Elements by lazy { processingEnvironment.elementUtils }
-  protected val typeUtils : Types by lazy { processingEnvironment.typeUtils }
-  protected val bindings = hashMapOf<String, FieldBinding>()
+  private val messager: Messager by lazy { processingEnvironment.messager }
+  protected val elementUtils: Elements by lazy { processingEnvironment.elementUtils }
+  protected val typeUtils: Types by lazy { processingEnvironment.typeUtils }
+  protected val bindings = hashMapOf<String, Binding>()
 
   abstract fun createAndAddBinding(element : Element)
   abstract fun generate() : TypeSpec

@@ -12,9 +12,9 @@ import com.bluelinelabs.conductor.Controller;
 import java.util.ArrayList;
 import java.util.Date;
 
-import io.dwak.ControllerBuilder;
-import io.dwak.Extra;
 import io.dwak.freight.Freight;
+import io.dwak.freight.annotation.ControllerBuilder;
+import io.dwak.freight.annotation.Extra;
 
 @ControllerBuilder
 public class MainController extends Controller {
