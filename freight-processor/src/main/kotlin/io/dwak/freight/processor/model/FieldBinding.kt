@@ -1,18 +1,18 @@
 package io.dwak.freight.processor.model
 
-import io.dwak.Extra
+import io.dwak.freight.annotation.Extra
 import io.dwak.freight.processor.extension.hasAnnotationWithName
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.type.TypeMirror
 
-class FieldBinding(element: Element) {
-  internal val name: String
-  internal val type: TypeMirror
+class FieldBinding(element: Element): Binding {
+  override val name: String
+  override val type: TypeMirror
+  override val kind: ElementKind
   internal val key: String
   internal val builderMethodName: String
-  internal val kind: ElementKind
   internal val isRequired: Boolean
 
   init {

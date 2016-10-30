@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.Controller
-import io.dwak.ControllerBuilder
-import io.dwak.Extra
+import io.dwak.freight.annotation.ControllerBuilder
+import io.dwak.freight.annotation.Extra
 
 @ControllerBuilder
 class MainController(bundle : Bundle) : Controller(bundle) {

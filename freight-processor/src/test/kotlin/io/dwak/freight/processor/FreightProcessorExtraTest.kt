@@ -1,13 +1,8 @@
 package io.dwak.freight.processor
 
 import com.google.testing.compile.JavaFileObjects
-
+import io.dwak.freight.util.processAndAssertEquals
 import org.junit.Test
-
-import javax.tools.JavaFileObject
-
-import com.google.common.truth.Truth.assertAbout
-import com.google.testing.compile.JavaSourceSubjectFactory.javaSource
 
 class FreightProcessorExtraTest {
 
@@ -18,7 +13,7 @@ class FreightProcessorExtraTest {
             = JavaFileObjects.forSourceLines("test.TestController",
                                              "package test;",
                                              "import com.bluelinelabs.conductor.Controller;",
-                                             "import io.dwak.Extra;",
+                                             "import io.dwak.freight.annotation.Extra;",
                                              "import android.support.annotation.NonNull;",
                                              "import android.support.annotation.Nullable;",
                                              "import android.view.LayoutInflater;",
@@ -60,7 +55,7 @@ class FreightProcessorExtraTest {
             = JavaFileObjects.forSourceLines("test.TestController",
                                              "package test;",
                                              "import com.bluelinelabs.conductor.Controller;",
-                                             "import io.dwak.Extra;",
+                                             "import io.dwak.freight.annotation.Extra;",
                                              "import java.lang.Boolean;",
                                              "import android.support.annotation.NonNull;",
                                              "import android.support.annotation.Nullable;",
@@ -102,7 +97,7 @@ class FreightProcessorExtraTest {
             = JavaFileObjects.forSourceLines("test.TestController",
                                              "package test;",
                                              "import com.bluelinelabs.conductor.Controller;",
-                                             "import io.dwak.Extra;",
+                                             "import io.dwak.freight.annotation.Extra;",
                                              "import java.lang.Boolean;",
                                              "import android.support.annotation.NonNull;",
                                              "import android.support.annotation.Nullable;",
@@ -145,7 +140,7 @@ class FreightProcessorExtraTest {
             = JavaFileObjects.forSourceLines("test.TestController",
                                              "package test;",
                                              "import com.bluelinelabs.conductor.Controller;",
-                                             "import io.dwak.Extra;",
+                                             "import io.dwak.freight.annotation.Extra;",
                                              "import android.support.annotation.NonNull;",
                                              "import android.support.annotation.Nullable;",
                                              "import android.view.LayoutInflater;",
@@ -186,7 +181,7 @@ class FreightProcessorExtraTest {
             = JavaFileObjects.forSourceLines("test.TestController",
                                              "package test;",
                                              "import com.bluelinelabs.conductor.Controller;",
-                                             "import io.dwak.Extra;",
+                                             "import io.dwak.freight.annotation.Extra;",
                                              "import android.support.annotation.NonNull;",
                                              "import android.support.annotation.Nullable;",
                                              "import android.view.LayoutInflater;",
@@ -228,7 +223,7 @@ class FreightProcessorExtraTest {
             = JavaFileObjects.forSourceLines("test.TestController",
                                              "package test;",
                                              "import com.bluelinelabs.conductor.Controller;",
-                                             "import io.dwak.Extra;",
+                                             "import io.dwak.freight.annotation.Extra;",
                                              "import java.lang.Integer;",
                                              "import android.support.annotation.NonNull;",
                                              "import android.support.annotation.Nullable;",
@@ -270,7 +265,7 @@ class FreightProcessorExtraTest {
             = JavaFileObjects.forSourceLines("test.TestController",
                                              "package test;",
                                              "import com.bluelinelabs.conductor.Controller;",
-                                             "import io.dwak.Extra;",
+                                             "import io.dwak.freight.annotation.Extra;",
                                              "import java.lang.Integer;",
                                              "import android.support.annotation.NonNull;",
                                              "import android.support.annotation.Nullable;",
@@ -313,7 +308,7 @@ class FreightProcessorExtraTest {
             = JavaFileObjects.forSourceLines("test.TestController",
                                              "package test;",
                                              "import com.bluelinelabs.conductor.Controller;",
-                                             "import io.dwak.Extra;",
+                                             "import io.dwak.freight.annotation.Extra;",
                                              "import android.support.annotation.NonNull;",
                                              "import android.support.annotation.Nullable;",
                                              "import android.view.LayoutInflater;",
@@ -354,7 +349,7 @@ class FreightProcessorExtraTest {
             = JavaFileObjects.forSourceLines("test.TestController",
                                              "package test;",
                                              "import com.bluelinelabs.conductor.Controller;",
-                                             "import io.dwak.Extra;",
+                                             "import io.dwak.freight.annotation.Extra;",
                                              "import android.support.annotation.NonNull;",
                                              "import android.support.annotation.Nullable;",
                                              "import android.view.LayoutInflater;",
@@ -396,7 +391,7 @@ class FreightProcessorExtraTest {
             = JavaFileObjects.forSourceLines("test.TestController",
                                              "package test;",
                                              "import com.bluelinelabs.conductor.Controller;",
-                                             "import io.dwak.Extra;",
+                                             "import io.dwak.freight.annotation.Extra;",
                                              "import java.lang.Float;",
                                              "import android.support.annotation.NonNull;",
                                              "import android.support.annotation.Nullable;",
@@ -438,7 +433,7 @@ class FreightProcessorExtraTest {
             = JavaFileObjects.forSourceLines("test.TestController",
                                              "package test;",
                                              "import com.bluelinelabs.conductor.Controller;",
-                                             "import io.dwak.Extra;",
+                                             "import io.dwak.freight.annotation.Extra;",
                                              "import java.lang.Float;",
                                              "import android.support.annotation.NonNull;",
                                              "import android.support.annotation.Nullable;",
@@ -481,7 +476,7 @@ class FreightProcessorExtraTest {
             = JavaFileObjects.forSourceLines("test.TestController",
                                              "package test;",
                                              "import com.bluelinelabs.conductor.Controller;",
-                                             "import io.dwak.Extra;",
+                                             "import io.dwak.freight.annotation.Extra;",
                                              "import java.lang.CharSequence;",
                                              "import android.support.annotation.NonNull;",
                                              "import android.support.annotation.Nullable;",
@@ -523,7 +518,7 @@ class FreightProcessorExtraTest {
             = JavaFileObjects.forSourceLines("test.TestController",
                                              "package test;",
                                              "import com.bluelinelabs.conductor.Controller;",
-                                             "import io.dwak.Extra;",
+                                             "import io.dwak.freight.annotation.Extra;",
                                              "import java.lang.String;",
                                              "import android.support.annotation.NonNull;",
                                              "import android.support.annotation.Nullable;",
@@ -566,7 +561,7 @@ class FreightProcessorExtraTest {
             = JavaFileObjects.forSourceLines("test.TestController",
                                              "package test;",
                                              "import com.bluelinelabs.conductor.Controller;",
-                                             "import io.dwak.Extra;",
+                                             "import io.dwak.freight.annotation.Extra;",
                                              "import java.lang.String;",
                                              "import android.support.annotation.NonNull;",
                                              "import android.support.annotation.Nullable;",
@@ -608,7 +603,7 @@ class FreightProcessorExtraTest {
             = JavaFileObjects.forSourceLines("test.TestController",
                                              "package test;",
                                              "import com.bluelinelabs.conductor.Controller;",
-                                             "import io.dwak.Extra;",
+                                             "import io.dwak.freight.annotation.Extra;",
                                              "import java.lang.String;",
                                              "import android.support.annotation.NonNull;",
                                              "import android.support.annotation.Nullable;",
@@ -643,16 +638,4 @@ class FreightProcessorExtraTest {
 
     processAndAssertEquals(inputFile, expectedOutput)
   }
-
-  private fun processAndAssertEquals(inputFile : JavaFileObject,
-                                     expectedOutput : JavaFileObject) {
-    assertAbout(javaSource())
-            .that(inputFile)
-            .withCompilerOptions("-Xlint:-processing")
-            .processedWith(FreightProcessor())
-            .compilesWithoutWarnings()
-            .and()
-            .generatesSources(expectedOutput)
-  }
-
 }

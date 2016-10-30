@@ -6,6 +6,7 @@ import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
 import com.vishnurajeevan.javapoet.dsl.classType
 import com.vishnurajeevan.javapoet.dsl.model.JavaPoetValue
+import io.dwak.freight.processor.model.ClassBinding
 import io.dwak.freight.processor.model.FieldBinding
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Element
@@ -17,13 +18,21 @@ class BuilderBindingClass(classPackage: String,
                           processingEnvironment: ProcessingEnvironment)
 : AbstractBindingClass(classPackage, className, targetClass, processingEnvironment) {
 
+  private var enclosedExtrasBindings: List<FieldBinding> = emptyList()
+  private val hasBundle by lazy { enclosedExtrasBindings.isNotEmpty() }
+
   companion object {
     val CLASS_SUFFIX = "Builder"
   }
 
   override fun createAndAddBinding(element: Element) {
-    val binding = FieldBinding(element)
+    val binding = ClassBinding(element)
     bindings.put(binding.name, binding)
+  }
+
+  fun createAndAddBinding(element: Element, enclosedExtrasBindings: List<FieldBinding>) {
+    createAndAddBinding(element)
+    this.enclosedExtrasBindings = enclosedExtrasBindings
   }
 
   override fun generate(): TypeSpec {
@@ -32,12 +41,16 @@ class BuilderBindingClass(classPackage: String,
               .addMember("value", "\$S", "unused")
               .build()
       annotations = setOf(suppressWarningAnnotation)
-      field(setOf(PRIVATE, FINAL), bundle, "bundle")
+      if (hasBundle) {
+        field(setOf(PRIVATE, FINAL), bundle, "bundle")
+      }
       constructor(PUBLIC) {
-        statement("this.bundle = new \$T()", bundle)
+        if (hasBundle) {
+          statement("this.bundle = new \$T()", bundle)
+        }
       }
 
-      bindings.values
+      enclosedExtrasBindings
               .forEach {
                 val parameterType = JavaPoetValue(FINAL, TypeName.get(it.type), "value")
                 method(setOf(PUBLIC, FINAL),
@@ -51,12 +64,15 @@ class BuilderBindingClass(classPackage: String,
 
       method(setOf(PUBLIC, FINAL), targetClassName, "build") {
         annotations = setOf(generateHasRequiredMethodsAnnotation())
-        statement("return new \$T(bundle)", targetClassName)
+        when {
+          hasBundle -> statement("return new \$T(bundle)", targetClassName)
+          else      -> statement("return new \$T()", targetClassName)
+        }
       }
 
       val routerTransaction = ClassName.get("com.bluelinelabs.conductor", "RouterTransaction")
 
-      method(setOf(PUBLIC, FINAL), routerTransaction, "asTransaction"){
+      method(setOf(PUBLIC, FINAL), routerTransaction, "asTransaction") {
         annotations = setOf(generateHasRequiredMethodsAnnotation())
         statement("return \$T.with(build())", routerTransaction)
       }
@@ -69,16 +85,18 @@ class BuilderBindingClass(classPackage: String,
                                                     "HasRequiredMethods")
     val hasRequiredAnnotationBuilder = AnnotationSpec.builder(hasRequiredMethodAnnotation)
     var arrayString = "{"
-    bindings.values
-            .filter { it.isRequired }
-            .take(bindings.values.size - 1)
-            .forEach {
-              arrayString += "\"${it.builderMethodName}\""
-              arrayString += ",\n"
-            }
-    val last = bindings.values.last()
-    if(last.isRequired && !arrayString.contains(last.builderMethodName)) {
-      arrayString += "\"${last.builderMethodName}\""
+    if (hasBundle) {
+      enclosedExtrasBindings
+              .filter { it.isRequired }
+              .take(enclosedExtrasBindings.size - 1)
+              .forEach {
+                arrayString += "\"${it.builderMethodName}\""
+                arrayString += ",\n"
+              }
+      val last = enclosedExtrasBindings.last()
+      if (last.isRequired && !arrayString.contains(last.builderMethodName)) {
+        arrayString += "\"${last.builderMethodName}\""
+      }
     }
 
     arrayString += "}"

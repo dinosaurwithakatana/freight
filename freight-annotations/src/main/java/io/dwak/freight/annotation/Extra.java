@@ -1,4 +1,4 @@
-package io.dwak;
+package io.dwak.freight.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
