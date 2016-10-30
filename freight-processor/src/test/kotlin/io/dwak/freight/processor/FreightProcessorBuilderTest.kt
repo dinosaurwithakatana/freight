@@ -50,7 +50,7 @@ class FreightProcessorBuilderTest {
                     "  }",
                     "}")
 
-    processAndAssertEquals(inputFile, outputFile)
+    processAndAssertEquals(inputFile, "test/TestControllerBuilder", outputFile)
 
   }
 }

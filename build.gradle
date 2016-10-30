@@ -40,7 +40,7 @@ ext {
 
     autoService = "com.google.auto.service:auto-service:1.0-rc2"
 
-    compileTesting = "com.google.testing.compile:compile-testing:0.9"
+    compileTesting = "com.google.testing.compile:compile-testing:0.10"
 
     conductor = "com.bluelinelabs:conductor:2.0.1"
 

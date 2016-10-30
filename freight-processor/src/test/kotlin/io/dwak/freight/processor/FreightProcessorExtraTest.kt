@@ -45,7 +45,7 @@ class FreightProcessorExtraTest {
                                              "  }",
                                              "}")
 
-    processAndAssertEquals(inputFile, expectedOutput)
+    processAndAssertEquals(inputFile, "test/TestController\$\$FreightTrain", expectedOutput)
   }
 
   @Test
@@ -88,7 +88,7 @@ class FreightProcessorExtraTest {
                                              "  }",
                                              "}")
 
-    processAndAssertEquals(inputFile, expectedOutput)
+    processAndAssertEquals(inputFile, "test/TestController\$\$FreightTrain", expectedOutput)
   }
 
   @Test
@@ -130,7 +130,7 @@ class FreightProcessorExtraTest {
                                              "  }",
                                              "}")
 
-    processAndAssertEquals(inputFile, expectedOutput)
+    processAndAssertEquals(inputFile, "test/TestController\$\$FreightTrain", expectedOutput)
   }
 
   @Test
@@ -172,7 +172,7 @@ class FreightProcessorExtraTest {
                                              "  }",
                                              "}")
 
-    processAndAssertEquals(inputFile, expectedOutput)
+    processAndAssertEquals(inputFile, "test/TestController\$\$FreightTrain", expectedOutput)
   }
 
   @Test
@@ -213,7 +213,7 @@ class FreightProcessorExtraTest {
                                              "  }",
                                              "}")
 
-    processAndAssertEquals(inputFile, expectedOutput)
+    processAndAssertEquals(inputFile, "test/TestController\$\$FreightTrain", expectedOutput)
   }
 
   @Test
@@ -256,7 +256,7 @@ class FreightProcessorExtraTest {
                                              "  }",
                                              "}")
 
-    processAndAssertEquals(inputFile, expectedOutput)
+    processAndAssertEquals(inputFile, "test/TestController\$\$FreightTrain", expectedOutput)
   }
 
   @Test
@@ -298,7 +298,7 @@ class FreightProcessorExtraTest {
                                              "  }",
                                              "}")
 
-    processAndAssertEquals(inputFile, expectedOutput)
+    processAndAssertEquals(inputFile, "test/TestController\$\$FreightTrain", expectedOutput)
   }
 
   @Test
@@ -340,7 +340,7 @@ class FreightProcessorExtraTest {
                                              "  }",
                                              "}")
 
-    processAndAssertEquals(inputFile, expectedOutput)
+    processAndAssertEquals(inputFile, "test/TestController\$\$FreightTrain", expectedOutput)
   }
 
   @Test
@@ -381,7 +381,7 @@ class FreightProcessorExtraTest {
                                              "  }",
                                              "}")
 
-    processAndAssertEquals(inputFile, expectedOutput)
+    processAndAssertEquals(inputFile, "test/TestController\$\$FreightTrain", expectedOutput)
   }
 
   @Test
@@ -424,7 +424,7 @@ class FreightProcessorExtraTest {
                                              "  }",
                                              "}")
 
-    processAndAssertEquals(inputFile, expectedOutput)
+    processAndAssertEquals(inputFile, "test/TestController\$\$FreightTrain", expectedOutput)
   }
 
   @Test
@@ -466,7 +466,7 @@ class FreightProcessorExtraTest {
                                              "  }",
                                              "}")
 
-    processAndAssertEquals(inputFile, expectedOutput)
+    processAndAssertEquals(inputFile, "test/TestController\$\$FreightTrain", expectedOutput)
   }
 
   @Test
@@ -509,7 +509,7 @@ class FreightProcessorExtraTest {
                                              "  }",
                                              "}")
 
-    processAndAssertEquals(inputFile, expectedOutput)
+    processAndAssertEquals(inputFile, "test/TestController\$\$FreightTrain", expectedOutput)
   }
 
   @Test
@@ -551,7 +551,7 @@ class FreightProcessorExtraTest {
                                              "  }",
                                              "}")
 
-    processAndAssertEquals(inputFile, expectedOutput)
+    processAndAssertEquals(inputFile, "test/TestController\$\$FreightTrain", expectedOutput)
   }
 
   @Test
@@ -594,7 +594,7 @@ class FreightProcessorExtraTest {
                                              "  }",
                                              "}")
 
-    processAndAssertEquals(inputFile, expectedOutput)
+    processAndAssertEquals(inputFile, "test/TestController\$\$FreightTrain", expectedOutput)
   }
 
   @Test
@@ -636,6 +636,6 @@ class FreightProcessorExtraTest {
                                              "  }",
                                              "}")
 
-    processAndAssertEquals(inputFile, expectedOutput)
+    processAndAssertEquals(inputFile, "test/TestController\$\$FreightTrain", expectedOutput)
   }
 }
