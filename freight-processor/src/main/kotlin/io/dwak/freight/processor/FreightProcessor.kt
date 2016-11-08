@@ -1,5 +1,6 @@
 package io.dwak.freight.processor
 
+import com.squareup.javapoet.ClassName
 import io.dwak.freight.annotation.ControllerBuilder
 import io.dwak.freight.annotation.Extra
 import io.dwak.freight.processor.binding.BuilderBindingClass
@@ -93,7 +94,9 @@ open class FreightProcessor : AbstractProcessor() {
                                                                       it as TypeElement,
                                                                       erasedTargetNames,
                                                                       scopeName)
-                    navigatorImplClass.createAndAddBinding(it)
+                    navigatorImplClass.createAndAddBinding(it,
+                                                           ClassName.get(builderClass.classPackage,
+                                                                         builderClass.className))
                   }
                 }
       }

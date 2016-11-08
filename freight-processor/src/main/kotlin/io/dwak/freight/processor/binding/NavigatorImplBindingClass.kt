@@ -6,6 +6,8 @@ import io.dwak.freight.processor.model.ClassBinding
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Element
 import javax.lang.model.element.Modifier.*
+import javax.lang.model.element.TypeElement
+import kotlin.properties.Delegates
 
 
 class NavigatorImplBindingClass(classPackage : String,
@@ -19,9 +21,16 @@ class NavigatorImplBindingClass(classPackage : String,
     val CLASS_SUFFIX = "Navigator"
   }
 
+  private var builderClasses = hashMapOf<String, ClassName>()
+
   override fun createAndAddBinding(element : Element) {
     val binding = ClassBinding(element)
     bindings.put(binding.screenName, binding)
+  }
+
+  fun createAndAddBinding(element : TypeElement, builderClass : ClassName) {
+    this.createAndAddBinding(element)
+    this.builderClasses.put(builderClass.simpleName(), builderClass)
   }
 
   override fun generate() : TypeSpec {
@@ -50,7 +59,7 @@ class NavigatorImplBindingClass(classPackage : String,
                       .addModifiers(PUBLIC)
                       .returns(TypeName.VOID)
 
-              val builderClassName = ClassName.get(classPackage, "${it.name}Builder")
+              val builderClassName = builderClasses["${it.name}Builder"]
               methodBuilder.addStatement("final \$T builder = new \$T()",
                                          builderClassName,
                                          builderClassName)
@@ -76,4 +85,5 @@ class NavigatorImplBindingClass(classPackage : String,
 
     return navigator.build()
   }
+
 }
