@@ -161,7 +161,7 @@ open class FreightProcessor : AbstractProcessor() {
     var navigatorClass = targetClassMap[scopeName]
     if (navigatorClass == null) {
       val targetClass = element.qualifiedName.toString()
-      val classPackage = element.packageName(elementUtils)
+      val classPackage = "io.dwak.freight.navigator.${scopeName.toLowerCase()}"
       val className = scopeName + NavigatorBindingClass.CLASS_SUFFIX
       navigatorClass = NavigatorBindingClass(classPackage, className, targetClass, processingEnv)
       targetClassMap.put(scopeName, navigatorClass)
@@ -178,7 +178,7 @@ open class FreightProcessor : AbstractProcessor() {
     var navigatorImplClass = targetClassMap[scopeName]
     if (navigatorImplClass == null) {
       val targetClass = element.qualifiedName.toString()
-      val classPackage = element.packageName(elementUtils)
+      val classPackage = "io.dwak.freight.navigator.${scopeName.toLowerCase()}"
       @Suppress("RemoveSingleExpressionStringTemplate")
       val className = "${NavigatorImplBindingClass.CLASS_PREFIX}" +
                       "$scopeName" +
