@@ -1,1 +1,1 @@
-include ':app', ':freight-annotations', ':freight-processor', ':freight', ':freight-lint', ':kotlinsample'
+include ':app', ':freight-annotations', ':freight-processor', ':freight', ':freight-lint', ':kotlinsample', ':freight-navigator'

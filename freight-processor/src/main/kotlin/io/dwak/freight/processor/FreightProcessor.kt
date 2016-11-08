@@ -1,10 +1,11 @@
 package io.dwak.freight.processor
 
-import com.google.auto.service.AutoService
 import io.dwak.freight.annotation.ControllerBuilder
 import io.dwak.freight.annotation.Extra
 import io.dwak.freight.processor.binding.BuilderBindingClass
 import io.dwak.freight.processor.binding.FreightTrainBindingClass
+import io.dwak.freight.processor.binding.NavigatorBindingClass
+import io.dwak.freight.processor.binding.NavigatorImplBindingClass
 import io.dwak.freight.processor.extension.className
 import io.dwak.freight.processor.extension.hasAnnotationWithName
 import io.dwak.freight.processor.extension.packageName
@@ -17,14 +18,13 @@ import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
 import javax.tools.Diagnostic
 
-@AutoService(value = Processor::class)
 open class FreightProcessor : AbstractProcessor() {
 
-  private lateinit var filer: Filer
-  private lateinit var messager: Messager
-  private lateinit var elementUtils: Elements
+  private lateinit var filer : Filer
+  private lateinit var messager : Messager
+  private lateinit var elementUtils : Elements
 
-  override fun init(processingEnv: ProcessingEnvironment) {
+  override fun init(processingEnv : ProcessingEnvironment) {
     super.init(processingEnv)
     this.filer = processingEnv.filer
     this.messager = processingEnv.messager
@@ -37,15 +37,17 @@ open class FreightProcessor : AbstractProcessor() {
 
   override fun getSupportedSourceVersion() = SourceVersion.latestSupported()
 
-  override fun process(annotations: MutableSet<out TypeElement>,
-                       roundEnv: RoundEnvironment): Boolean {
+  override fun process(annotations : MutableSet<out TypeElement>,
+                       roundEnv : RoundEnvironment) : Boolean {
 
     if (annotations.isNotEmpty()) {
       val freightTrainTargetClassMap = hashMapOf<TypeElement, FreightTrainBindingClass>()
       val builderTargetClassMap = hashMapOf<TypeElement, BuilderBindingClass>()
+      val navigatorTargetClassMap = hashMapOf<String, NavigatorBindingClass>()
+      val navigatorImplTargetClassMap = hashMapOf<String, NavigatorImplBindingClass>()
       val erasedTargetNames = mutableSetOf<String>()
       annotations.forEach {
-        typeElement: TypeElement ->
+        typeElement : TypeElement ->
         val elements = roundEnv.getElementsAnnotatedWith(typeElement)
 
         elements.filter { it.hasAnnotationWithName(Extra::class.java.simpleName) }
@@ -57,7 +59,7 @@ open class FreightProcessor : AbstractProcessor() {
                                                                erasedTargetNames)
                     shipperClass.createAndAddBinding(it)
 
-                  } catch (e: Exception) {
+                  } catch (e : Exception) {
 
                   }
                 }
@@ -75,15 +77,35 @@ open class FreightProcessor : AbstractProcessor() {
                                                         it as TypeElement,
                                                         erasedTargetNames)
                   builderClass.createAndAddBinding(it, enclosedExtrasElements)
+
+                  val annotationInstance = it.getAnnotation(ControllerBuilder::class.java)
+                  val scopeName = annotationInstance.scope
+                  val screenName = annotationInstance.value
+                  note(scopeName)
+                  if (screenName.isNotEmpty()) {
+                    val navigatorClass = getOrCreateNavigator(navigatorTargetClassMap,
+                                                              it as TypeElement,
+                                                              erasedTargetNames,
+                                                              scopeName)
+                    navigatorClass.createAndAddBinding(it)
+
+                    val navigatorImplClass = getOrCreateNavigatorImpl(navigatorImplTargetClassMap,
+                                                                      it as TypeElement,
+                                                                      erasedTargetNames,
+                                                                      scopeName)
+                    navigatorImplClass.createAndAddBinding(it)
+                  }
                 }
       }
 
-      freightTrainTargetClassMap.values
-              .plus(builderTargetClassMap.values)
+      (freightTrainTargetClassMap.values
+       + builderTargetClassMap.values
+       + navigatorTargetClassMap.values
+       + navigatorImplTargetClassMap.values)
               .forEach {
                 try {
                   it.writeToFiler(filer)
-                } catch (e: IOException) {
+                } catch (e : IOException) {
                   messager.printMessage(Diagnostic.Kind.ERROR, e.message)
                 }
               }
@@ -92,16 +114,19 @@ open class FreightProcessor : AbstractProcessor() {
     return true
   }
 
-  private fun getOrCreateFreightTrain(targetClassMap: MutableMap<TypeElement, FreightTrainBindingClass>,
-                                      enclosingElement: TypeElement,
-                                      erasedTargetNames: MutableSet<String>)
+  private fun getOrCreateFreightTrain(targetClassMap : MutableMap<TypeElement, FreightTrainBindingClass>,
+                                      enclosingElement : TypeElement,
+                                      erasedTargetNames : MutableSet<String>)
           : FreightTrainBindingClass {
     var freightTrainClass = targetClassMap[enclosingElement]
     if (freightTrainClass == null) {
       val targetClass = enclosingElement.qualifiedName.toString()
       val classPackage = enclosingElement.packageName(elementUtils)
       val className = enclosingElement.className(classPackage) + FreightTrainBindingClass.CLASS_SUFFIX
-      freightTrainClass = FreightTrainBindingClass(classPackage, className, targetClass, processingEnv)
+      freightTrainClass = FreightTrainBindingClass(classPackage,
+                                                   className,
+                                                   targetClass,
+                                                   processingEnv)
       targetClassMap.put(enclosingElement, freightTrainClass)
       erasedTargetNames.add(enclosingElement.toString())
     }
@@ -109,9 +134,9 @@ open class FreightProcessor : AbstractProcessor() {
     return freightTrainClass
   }
 
-  private fun getOrCreateBuilder(targetClassMap: MutableMap<TypeElement, BuilderBindingClass>,
-                                 element: TypeElement,
-                                 erasedTargetNames: MutableSet<String>)
+  private fun getOrCreateBuilder(targetClassMap : MutableMap<TypeElement, BuilderBindingClass>,
+                                 element : TypeElement,
+                                 erasedTargetNames : MutableSet<String>)
           : BuilderBindingClass {
     var builderClass = targetClassMap[element]
     if (builderClass == null) {
@@ -126,13 +151,53 @@ open class FreightProcessor : AbstractProcessor() {
     return builderClass
   }
 
+  private fun getOrCreateNavigator(targetClassMap : MutableMap<String, NavigatorBindingClass>,
+                                   element : TypeElement,
+                                   erasedTargetNames : MutableSet<String>,
+                                   scopeName : String) : NavigatorBindingClass {
+    var navigatorClass = targetClassMap[scopeName]
+    if (navigatorClass == null) {
+      val targetClass = element.qualifiedName.toString()
+      val classPackage = element.packageName(elementUtils)
+      val className = scopeName + NavigatorBindingClass.CLASS_SUFFIX
+      navigatorClass = NavigatorBindingClass(classPackage, className, targetClass, processingEnv)
+      targetClassMap.put(scopeName, navigatorClass)
+      erasedTargetNames.add(element.toString())
+    }
+
+    return navigatorClass
+  }
+
+  private fun getOrCreateNavigatorImpl(targetClassMap : MutableMap<String, NavigatorImplBindingClass>,
+                                       element : TypeElement,
+                                       erasedTargetNames : MutableSet<String>,
+                                       scopeName : String) : NavigatorImplBindingClass {
+    var navigatorImplClass = targetClassMap[scopeName]
+    if (navigatorImplClass == null) {
+      val targetClass = element.qualifiedName.toString()
+      val classPackage = element.packageName(elementUtils)
+      @Suppress("RemoveSingleExpressionStringTemplate")
+      val className = "${NavigatorImplBindingClass.CLASS_PREFIX}" +
+                      "$scopeName" +
+                      "${NavigatorImplBindingClass.CLASS_SUFFIX}"
+      navigatorImplClass = NavigatorImplBindingClass(classPackage,
+                                                 className,
+                                                 targetClass,
+                                                 processingEnv)
+      targetClassMap.put(scopeName, navigatorImplClass)
+      erasedTargetNames.add(element.toString())
+    }
+
+    return navigatorImplClass
+  }
+
   @Suppress("unused")
-  private fun error(element: Element, message: String, vararg args: Any) {
+  private fun error(element : Element, message : String, vararg args : Any) {
     messager.printMessage(Diagnostic.Kind.ERROR, String.format(message, args), element)
   }
 
   @Suppress("unused")
-  private fun note(note: String) {
+  private fun note(note : String) {
     messager.printMessage(Diagnostic.Kind.NOTE, note)
   }
 }

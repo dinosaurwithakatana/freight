@@ -8,4 +8,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface ControllerBuilder {
+    String value() default "";
+    String scope() default "Main";
 }
