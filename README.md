@@ -54,6 +54,69 @@ public class MainActivity extends AppCompatActivity {
 }
 ```
 
+Navigator
+----
+
+Freight can generate scoped navigators for use outside of the main controller.
+
+```java
+@ControllerBuilder(value = "Login",
+                            scope = "Welcome",
+                            popChangeHandler = FadeChangeHandler.class,
+                            pushChangeHandler = FadeChangeHandler.class)
+public class LoginController {
+    @Extra String username;
+    @Nullable @Extra String password;
+
+
+}
+```
+
+this will generate a "scoped" navigator interface named `WelcomeNavigator`
+
+```java
+public interface WelcomeNavigator extends Navigator {
+  void goToLogin(final String username, @Nullable final String password);
+}
+```
+
+as well as an implementation handling the changes via conductor's router.
+
+```java
+public class Freight_WelcomeNavigator implements WelcomeNavigator {
+  private final Router router;
+
+  public Freight_WelcomeNavigator(Router router) {
+    this.router = router;
+  }
+
+  public void goToLogin(final String username, @Nullable final String password) {
+    final LoginControllerBuilder builder = new LoginControllerBuilder();
+    builder.username(username);
+    builder.password(password);
+    RouterTransaction rt = builder.asTransaction()
+        .tag("Login");
+    router.pushController(rt);
+  }
+}
+```
+
+To use this with DI (such as dagger) you can create a `NavigatorFactory` and inject that
+
+```java
+public class NavigatorFactory {
+    private Router router;
+
+    @Inject
+    public NavigatorFactory(Router router) {
+        this.router = router;
+    }
+
+    public WelcomeNavigator welcomeNavigator() {
+        return new Freight_WelcomeNavigator(router);
+    }
+}
+```
 There is a lint check bundled with the API artifact that will verify you've called all required builder methods.
 
 Setup
