@@ -71,8 +71,8 @@ buildscript {
 apply plugin: 'com.neenbedankt.android-apt'
 
 dependencies {
-    apt 'io.dwak:freight-processor:0.3-SNAPSHOT'
-    compile 'io.dwak:freight:0.3-SNAPSHOT'
+    apt 'io.dwak:freight-processor:0.5-SNAPSHOT'
+    compile 'io.dwak:freight:0.5-SNAPSHOT'
 }
 ```
 

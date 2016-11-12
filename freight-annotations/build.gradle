@@ -10,6 +10,7 @@ for (File file : sdkHandler.sdkLoader.repositories) {
         url = file.toURI()
     }
 }
+
 dependencies {
 }
 

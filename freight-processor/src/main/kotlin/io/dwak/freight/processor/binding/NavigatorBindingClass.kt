@@ -26,7 +26,6 @@ class NavigatorBindingClass(classPackage : String,
   override fun generate() : TypeSpec {
     val navigator = TypeSpec.interfaceBuilder(className).addModifiers(PUBLIC)
             .addSuperinterface(ClassName.get("io.dwak.freight", "Navigator"))
-    note("bindings ${bindings.values}")
     bindings.values
             .map { it as ClassBinding }
             .forEach {

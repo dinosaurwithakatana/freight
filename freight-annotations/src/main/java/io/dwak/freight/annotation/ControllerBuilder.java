@@ -10,4 +10,6 @@ import java.lang.annotation.Target;
 public @interface ControllerBuilder {
     String value() default "";
     String scope() default "Main";
+    Class pushChangeHandler() default Void.class;
+    Class popChangeHandler() default Void.class;
 }

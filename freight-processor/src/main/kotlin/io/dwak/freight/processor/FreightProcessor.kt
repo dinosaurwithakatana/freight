@@ -82,7 +82,6 @@ open class FreightProcessor : AbstractProcessor() {
                   val annotationInstance = it.getAnnotation(ControllerBuilder::class.java)
                   val scopeName = annotationInstance.scope
                   val screenName = annotationInstance.value
-                  note(scopeName)
                   if (screenName.isNotEmpty()) {
                     val navigatorClass = getOrCreateNavigator(navigatorTargetClassMap,
                                                               it as TypeElement,

@@ -5,6 +5,7 @@ import android.util.Log;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import io.dwak.freight.annotation.ControllerBuilder;
 import io.dwak.freight.internal.IFreightTrain;
 
 public final class Freight {

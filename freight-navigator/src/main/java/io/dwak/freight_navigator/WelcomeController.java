@@ -8,11 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 
 import io.dwak.freight.annotation.ControllerBuilder;
 
-@ControllerBuilder(value = "WelcomeScreen", scope = "Welcome")
-public class WelcomeController extends Controller{
+@ControllerBuilder(value = "WelcomeScreen",
+        scope = "Welcome",
+        pushChangeHandler = FadeChangeHandler.class)
+public class WelcomeController extends Controller {
     public WelcomeController() {
     }
 
