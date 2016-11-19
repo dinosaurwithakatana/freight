@@ -52,10 +52,12 @@ class NavigatorImplBindingClass(classPackage: String,
                               .build())
             .addMethod(constructor)
 
+
     bindings.values
             .map { it as ClassBinding }
             .forEach { binding: ClassBinding ->
               val methodBuilder = MethodSpec.methodBuilder("goTo${binding.screenName.capitalizeFirst()}")
+                      .addAnnotation(Override::class.java)
                       .addModifiers(PUBLIC)
                       .returns(TypeName.VOID)
 
@@ -90,7 +92,7 @@ class NavigatorImplBindingClass(classPackage: String,
               val voidType = processingEnvironment
                       .getTypeMirror("java.lang.Void")
               binding.popChangeHandler?.let {
-                if(typeUtils.isSameType(it, voidType)){
+                if (typeUtils.isSameType(it, voidType)) {
                   return@let
                 }
                 require(typeUtils.isSubtype(it, controllerChangeHandler)) {
@@ -100,10 +102,10 @@ class NavigatorImplBindingClass(classPackage: String,
               }
 
               binding.pushChangeHandler?.let {
-                if(typeUtils.isSameType(it, voidType)){
+                if (typeUtils.isSameType(it, voidType)) {
                   return@let
                 }
-                require(typeUtils.isSubtype(it, controllerChangeHandler)){
+                require(typeUtils.isSubtype(it, controllerChangeHandler)) {
                   "PushChangeHandler must be of type ControllerChangeHandler. Is $it"
                 }
                 methodBuilder.addStatement("rt.pushChangeHandler(new \$T())", it)
@@ -112,6 +114,13 @@ class NavigatorImplBindingClass(classPackage: String,
               methodBuilder.addStatement("router.pushController(rt)")
               navigator.addMethod(methodBuilder.build())
             }
+
+    navigator.addMethod(MethodSpec.methodBuilder("goBack")
+                                .addAnnotation(Override::class.java)
+                                .addModifiers(PUBLIC)
+                                .returns(TypeName.BOOLEAN)
+                                .addStatement("return router.popCurrentController()")
+                                .build())
 
     return navigator.build()
   }
