@@ -7,6 +7,7 @@ import javax.tools.JavaFileObject
 
 fun processAndAssertEquals(inputFile: List<JavaFileObject>,
                            vararg nameOutputPair: Pair<String, JavaFileObject>){
+  println(inputFile.toString())
   val compilation = javac().withProcessors(FreightProcessor())
       .withOptions("-Xlint:-processing")
       .compile(inputFile)
