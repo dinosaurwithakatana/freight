@@ -1,0 +1,28 @@
+nguage: android
+
+android:
+  components:
+    - tools
+    - platform-tools
+    - build-tools-24.0.2
+    - android-25
+    - extra-android-m2repository
+    - sys-img-armeabi-v7a-android-18
+
+jdk:
+  - oraclejdk8
+
+branches:
+  except:
+    - gh-pages
+
+notifications:
+  email: false
+
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.m2
+    - $HOME/.gradle
+
