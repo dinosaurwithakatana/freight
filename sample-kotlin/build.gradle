@@ -1,19 +1,17 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    compileSdkVersion 24
+    buildToolsVersion "$rootProject.ext.buildToolsVersion"
 
     defaultConfig {
-        applicationId "io.dwak.freight_navigator"
-        minSdkVersion 21
-        targetSdkVersion 25
+        applicationId "io.dwak.freight.kotlinsample"
+        minSdkVersion 16
+        targetSdkVersion 24
         versionCode 1
         versionName "1.0"
-
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
     }
     buildTypes {
         release {
@@ -25,9 +23,10 @@ android {
 
 dependencies {
     compile project(':freight')
-    apt project(':freight-processor')
+    kapt project(':freight-processor')
 
     compile rootProject.ext.appcompat
+    compile rootProject.ext.kotlin
     compile rootProject.ext.conductor
 
     testCompile rootProject.ext.junit
