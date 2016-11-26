@@ -55,8 +55,9 @@ class FreightProcessorNavigatorTest {
                                          "  }",
                                          "}")
 
+    val mainNavigatorName = "$NAVIGATOR_PACKAGE.main.MainNavigator"
     val expectedInterfaceOutput
-        = JavaFileObjects.forSourceLines("$NAVIGATOR_PACKAGE.main.MainNavigator",
+        = JavaFileObjects.forSourceLines(mainNavigatorName,
                                          "package $NAVIGATOR_PACKAGE.main;",
                                          "",
                                          "import io.dwak.freight.Navigator;",
@@ -64,8 +65,9 @@ class FreightProcessorNavigatorTest {
                                          "public interface MainNavigator extends Navigator {",
                                          "  void goToTest();",
                                          "}")
+    val freightMainNavigatorName = "$NAVIGATOR_PACKAGE.main.Freight_MainNavigator"
     val expectedFreightImplOutput
-        = JavaFileObjects.forSourceLines("$NAVIGATOR_PACKAGE.main.Freight_MainNavigator",
+        = JavaFileObjects.forSourceLines(freightMainNavigatorName,
                                          "package $NAVIGATOR_PACKAGE.main;",
                                          "import com.bluelinelabs.conductor.Router;",
                                          "import com.bluelinelabs.conductor.RouterTransaction;",
@@ -86,8 +88,8 @@ class FreightProcessorNavigatorTest {
                                          "}")
 
     processAndAssertEquals(listOf(freightNavigatorJavaSource, inputFile),
-                           "$NAVIGATOR_PACKAGE.main.MainNavigator" to expectedInterfaceOutput,
-                           "$NAVIGATOR_PACKAGE.main.Freight_MainNavigator" to expectedFreightImplOutput)
+                           mainNavigatorName to expectedInterfaceOutput,
+                           freightMainNavigatorName to expectedFreightImplOutput)
   }
 
   @Test
@@ -120,8 +122,9 @@ class FreightProcessorNavigatorTest {
                                          "  }",
                                          "}")
 
+    val mainNavigatorName = "$NAVIGATOR_PACKAGE.main.MainNavigator"
     val expectedInterfaceOutput
-        = JavaFileObjects.forSourceLines("$NAVIGATOR_PACKAGE.main.MainNavigator",
+        = JavaFileObjects.forSourceLines(mainNavigatorName,
                                          "package $NAVIGATOR_PACKAGE.main;",
                                          "",
                                          "import io.dwak.freight.Navigator;",
@@ -130,8 +133,9 @@ class FreightProcessorNavigatorTest {
                                          "public interface MainNavigator extends Navigator {",
                                          "  void goToTest(final String stringExtra);",
                                          "}")
+    val freightMainNavigatorName = "$NAVIGATOR_PACKAGE.main.Freight_MainNavigator"
     val expectedFreightImplOutput
-        = JavaFileObjects.forSourceLines("$NAVIGATOR_PACKAGE.main.Freight_MainNavigator",
+        = JavaFileObjects.forSourceLines(freightMainNavigatorName,
                                          "package $NAVIGATOR_PACKAGE.main;",
                                          "import com.bluelinelabs.conductor.Router;",
                                          "import com.bluelinelabs.conductor.RouterTransaction;",
@@ -154,8 +158,8 @@ class FreightProcessorNavigatorTest {
                                          "}")
 
     processAndAssertEquals(listOf(freightNavigatorJavaSource, inputFile),
-                           "$NAVIGATOR_PACKAGE.main.MainNavigator" to expectedInterfaceOutput,
-                           "$NAVIGATOR_PACKAGE.main.Freight_MainNavigator" to expectedFreightImplOutput)
+                           mainNavigatorName to expectedInterfaceOutput,
+                           freightMainNavigatorName to expectedFreightImplOutput)
   }
 
   @Test
@@ -180,8 +184,9 @@ class FreightProcessorNavigatorTest {
                                          "  }",
                                          "}")
 
+    val testNavigator = "$NAVIGATOR_PACKAGE.test.TestNavigator"
     val expectedInterfaceOutput
-        = JavaFileObjects.forSourceLines("$NAVIGATOR_PACKAGE.test.TestNavigator",
+        = JavaFileObjects.forSourceLines(testNavigator,
                                          "package $NAVIGATOR_PACKAGE.test;",
                                          "",
                                          "import io.dwak.freight.Navigator;",
@@ -189,8 +194,9 @@ class FreightProcessorNavigatorTest {
                                          "public interface TestNavigator extends Navigator {",
                                          "  void goToTest();",
                                          "}")
+    val freightMainNavigator = "$NAVIGATOR_PACKAGE.test.Freight_TestNavigator"
     val expectedFreightImplOutput
-        = JavaFileObjects.forSourceLines("$NAVIGATOR_PACKAGE.test.Freight_TestNavigator",
+        = JavaFileObjects.forSourceLines(freightMainNavigator,
                                          "package $NAVIGATOR_PACKAGE.test;",
                                          "import com.bluelinelabs.conductor.Router;",
                                          "import com.bluelinelabs.conductor.RouterTransaction;",
@@ -211,8 +217,8 @@ class FreightProcessorNavigatorTest {
                                          "}")
 
     processAndAssertEquals(listOf(freightNavigatorJavaSource, inputFile),
-                           "$NAVIGATOR_PACKAGE.test.TestNavigator" to expectedInterfaceOutput,
-                           "$NAVIGATOR_PACKAGE.test.Freight_TestNavigator" to expectedFreightImplOutput)
+                           testNavigator to expectedInterfaceOutput,
+                           freightMainNavigator to expectedFreightImplOutput)
   }
 
   @Test
@@ -257,8 +263,9 @@ class FreightProcessorNavigatorTest {
                                          "  }",
                                          "}")
 
+    val mainNavigatorName = "$NAVIGATOR_PACKAGE.main.MainNavigator"
     val expectedInterfaceOutput
-        = JavaFileObjects.forSourceLines("$NAVIGATOR_PACKAGE.main.MainNavigator",
+        = JavaFileObjects.forSourceLines(mainNavigatorName,
                                          "package $NAVIGATOR_PACKAGE.main;",
                                          "",
                                          "import io.dwak.freight.Navigator;",
@@ -267,8 +274,9 @@ class FreightProcessorNavigatorTest {
                                          "  void goToTest();",
                                          "  void goToTest2();",
                                          "}")
+    val freightMainNavigator = "$NAVIGATOR_PACKAGE.main.Freight_MainNavigator"
     val expectedFreightImplOutput
-        = JavaFileObjects.forSourceLines("$NAVIGATOR_PACKAGE.main.Freight_MainNavigator",
+        = JavaFileObjects.forSourceLines(freightMainNavigator,
                                          "package $NAVIGATOR_PACKAGE.main;",
                                          "import com.bluelinelabs.conductor.Router;",
                                          "import com.bluelinelabs.conductor.RouterTransaction;",
@@ -297,8 +305,8 @@ class FreightProcessorNavigatorTest {
                                          "}")
 
     processAndAssertEquals(listOf(freightNavigatorJavaSource, testController, testController2),
-                           "$NAVIGATOR_PACKAGE.main.MainNavigator" to expectedInterfaceOutput,
-                           "$NAVIGATOR_PACKAGE.main.Freight_MainNavigator" to expectedFreightImplOutput)
+                           mainNavigatorName to expectedInterfaceOutput,
+                           freightMainNavigator to expectedFreightImplOutput)
   }
 
   @Test
@@ -343,8 +351,9 @@ class FreightProcessorNavigatorTest {
                                          "  }",
                                          "}")
 
+    val testNavigatorName = "$NAVIGATOR_PACKAGE.test.TestNavigator"
     val expectedInterfaceOutput
-        = JavaFileObjects.forSourceLines("$NAVIGATOR_PACKAGE.test.TestNavigator",
+        = JavaFileObjects.forSourceLines(testNavigatorName,
                                          "package $NAVIGATOR_PACKAGE.test;",
                                          "",
                                          "import io.dwak.freight.Navigator;",
@@ -353,8 +362,9 @@ class FreightProcessorNavigatorTest {
                                          "  void goToTest();",
                                          "  void goToTest2();",
                                          "}")
+    val freightImplName = "$NAVIGATOR_PACKAGE.test.Freight_TestNavigator"
     val expectedFreightImplOutput
-        = JavaFileObjects.forSourceLines("$NAVIGATOR_PACKAGE.test.Freight_TestNavigator",
+        = JavaFileObjects.forSourceLines(freightImplName,
                                          "package $NAVIGATOR_PACKAGE.test;",
                                          "import com.bluelinelabs.conductor.Router;",
                                          "import com.bluelinelabs.conductor.RouterTransaction;",
@@ -383,8 +393,8 @@ class FreightProcessorNavigatorTest {
                                          "}")
 
     processAndAssertEquals(listOf(freightNavigatorJavaSource, testController, testController2),
-                           "$NAVIGATOR_PACKAGE.test.TestNavigator" to expectedInterfaceOutput,
-                           "$NAVIGATOR_PACKAGE.test.Freight_TestNavigator" to expectedFreightImplOutput)
+                           testNavigatorName to expectedInterfaceOutput,
+                           freightImplName to expectedFreightImplOutput)
   }
 
 }
