@@ -397,4 +397,112 @@ class FreightProcessorNavigatorTest {
                            freightImplName to expectedFreightImplOutput)
   }
 
+  @Test
+  fun twoControllersWithExtrasCustomScope() {
+    val testController
+        = JavaFileObjects.forSourceLines("test.TestController",
+                                         "package test;",
+                                         "import com.bluelinelabs.conductor.Controller;",
+                                         "import io.dwak.freight.annotation.ControllerBuilder;",
+                                         "import io.dwak.freight.annotation.Extra;",
+                                         "import android.os.Bundle;",
+                                         "import android.support.annotation.NonNull;",
+                                         "import android.support.annotation.Nullable;",
+                                         "import android.view.LayoutInflater;",
+                                         "import android.view.View;",
+                                         "import android.view.ViewGroup;",
+                                         "import java.lang.String;",
+                                         "@ControllerBuilder(value = \"Test\", scope = \"Test\")",
+                                         "public class TestController extends Controller {",
+                                         "  @Extra String myExtra;",
+                                         "",
+                                         "  public TestController(Bundle bundle) {",
+                                         "    super(bundle);",
+                                         "  }",
+                                         "",
+                                         "  @NonNull",
+                                         "  @Override",
+                                         "  protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {",
+                                         "    return null;",
+                                         "  }",
+                                         "}")
+
+    val testController2
+        = JavaFileObjects.forSourceLines("test.TestController2",
+                                         "package test;",
+                                         "import com.bluelinelabs.conductor.Controller;",
+                                         "import io.dwak.freight.annotation.ControllerBuilder;",
+                                         "import io.dwak.freight.annotation.Extra;",
+                                         "import android.os.Bundle;",
+                                         "import android.support.annotation.NonNull;",
+                                         "import android.support.annotation.Nullable;",
+                                         "import android.view.LayoutInflater;",
+                                         "import android.view.View;",
+                                         "import android.view.ViewGroup;",
+                                         "@ControllerBuilder(value = \"Test2\", scope = \"Test\")",
+                                         "public class TestController2 extends Controller {",
+                                         "  @Extra int myExtra2;",
+                                         "",
+                                         "  public TestController2(Bundle bundle) {",
+                                         "    super(bundle);",
+                                         "  }",
+                                         "",
+                                         "  @NonNull",
+                                         "  @Override",
+                                         "  protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {",
+                                         "    return null;",
+                                         "  }",
+                                         "}")
+
+    val testNavigatorName = "$NAVIGATOR_PACKAGE.test.TestNavigator"
+    val expectedInterfaceOutput
+        = JavaFileObjects.forSourceLines(testNavigatorName,
+                                         "package $NAVIGATOR_PACKAGE.test;",
+                                         "",
+                                         "import io.dwak.freight.Navigator;",
+                                         "import java.lang.String;",
+                                         "",
+                                         "public interface TestNavigator extends Navigator {",
+                                         "  void goToTest(final String myExtra);",
+                                         "",
+                                         "  void goToTest2(final int myExtra2);",
+                                         "}")
+    val freightImplName = "$NAVIGATOR_PACKAGE.test.Freight_TestNavigator"
+    val expectedFreightImplOutput
+        = JavaFileObjects.forSourceLines(freightImplName,
+                                         "package $NAVIGATOR_PACKAGE.test;",
+                                         "import com.bluelinelabs.conductor.Router;",
+                                         "import com.bluelinelabs.conductor.RouterTransaction;",
+                                         "import io.dwak.freight.internal.FreightNavigator;",
+                                         "import java.lang.Override;",
+                                         "import java.lang.String;",
+                                         "import test.TestController2Builder;",
+                                         "import test.TestControllerBuilder;",
+                                         "public class Freight_TestNavigator extends FreightNavigator implements TestNavigator {",
+                                         "  public Freight_TestNavigator(Router router) {",
+                                         "    super(router);",
+                                         "  }",
+                                         "  @Override",
+                                         "  public void goToTest(final String myExtra) {",
+                                         "    final TestControllerBuilder builder = new TestControllerBuilder();",
+                                         "    builder.myExtra(myExtra);",
+                                         "    RouterTransaction rt = builder.asTransaction()",
+                                         "        .tag(\"Test\");",
+                                         "    router.pushController(rt);",
+                                         "  }",
+                                         "  @Override",
+                                         "  public void goToTest2(final int myExtra2) {",
+                                         "    final TestController2Builder builder = new TestController2Builder();",
+                                         "    builder.myExtra2(myExtra2);",
+                                         "    RouterTransaction rt = builder.asTransaction()",
+                                         "        .tag(\"Test2\");",
+                                         "    router.pushController(rt);",
+                                         "  }",
+                                         "}")
+
+    processAndAssertEquals(listOf(freightNavigatorJavaSource, testController, testController2),
+                           testNavigatorName to expectedInterfaceOutput,
+                           freightImplName to expectedFreightImplOutput)
+  }
+
 }
