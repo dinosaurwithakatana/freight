@@ -1,5 +1,7 @@
 package io.dwak.freight.processor
 
+import com.google.common.truth.Truth
+import com.google.testing.compile.CompilationSubject
 import com.google.testing.compile.CompilationSubject.assertThat
 import com.google.testing.compile.Compiler
 import com.google.testing.compile.Compiler.javac
@@ -285,6 +287,67 @@ class FreightProcessorNavigatorTest {
 
     assertThat(compilation).succeeded()
     assertThat(compilation).hadWarningContaining("needs a screen name value")
+  }
+
+  @Test
+  fun singleControllerNoExtrasNoScopeFailedPopChangeHandler() {
+    val inputFile
+        = JavaFileObjects.forSourceLines("test.TestController",
+                                         "package test;",
+                                         "import com.bluelinelabs.conductor.Controller;",
+                                         "import io.dwak.freight.annotation.ControllerBuilder;",
+                                         "import android.support.annotation.NonNull;",
+                                         "import android.support.annotation.NonNull;",
+                                         "import android.support.annotation.Nullable;",
+                                         "import android.view.LayoutInflater;",
+                                         "import android.view.View;",
+                                         "import android.view.ViewGroup;",
+                                         "@ControllerBuilder(value = \"Test\", popChangeHandler = String.class)",
+                                         "public class TestController extends Controller {",
+                                         "",
+                                         "  @NonNull",
+                                         "  @Override",
+                                         "  protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {",
+                                         "    return null;",
+                                         "  }",
+                                         "}")
+
+    val compilation = javac()
+        .withProcessors(FreightProcessor())
+        .withOptions("-Xlint:-processing")
+        .compile(inputFile)
+    assertThat(compilation).failed()
+    assertThat(compilation).hadErrorContaining("must be of type ControllerChangeHandler")
+  }
+
+  @Test
+  fun singleControllerNoExtrasNoScopeFailedPushChangeHandler() {
+    val inputFile
+        = JavaFileObjects.forSourceLines("test.TestController",
+                                         "package test;",
+                                         "import com.bluelinelabs.conductor.Controller;",
+                                         "import io.dwak.freight.annotation.ControllerBuilder;",
+                                         "import android.support.annotation.NonNull;",
+                                         "import android.support.annotation.Nullable;",
+                                         "import android.view.LayoutInflater;",
+                                         "import android.view.View;",
+                                         "import android.view.ViewGroup;",
+                                         "@ControllerBuilder(value = \"Test\", pushChangeHandler = String.class)",
+                                         "public class TestController extends Controller {",
+                                         "",
+                                         "  @NonNull",
+                                         "  @Override",
+                                         "  protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {",
+                                         "    return null;",
+                                         "  }",
+                                         "}")
+
+    val compilation = javac()
+        .withProcessors(FreightProcessor())
+        .withOptions("-Xlint:-processing")
+        .compile(inputFile)
+    assertThat(compilation).failed()
+    assertThat(compilation).hadErrorContaining("must be of type ControllerChangeHandler")
   }
 
   @Test
