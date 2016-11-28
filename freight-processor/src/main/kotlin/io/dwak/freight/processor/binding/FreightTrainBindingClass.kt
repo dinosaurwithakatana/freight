@@ -1,9 +1,13 @@
 package io.dwak.freight.processor.binding
 
-import com.squareup.javapoet.*
+import com.squareup.javapoet.AnnotationSpec
+import com.squareup.javapoet.ClassName
+import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.ParameterSpec
+import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName.VOID
-import com.vishnurajeevan.javapoet.dsl.classType
-import com.vishnurajeevan.javapoet.dsl.model.JavaPoetValue
+import com.squareup.javapoet.TypeSpec
+import com.squareup.javapoet.TypeVariableName
 import io.dwak.freight.processor.model.FieldBinding
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Element
@@ -15,7 +19,7 @@ class FreightTrainBindingClass(classPackage: String,
                                className: String,
                                targetClass: String,
                                processingEnvironment: ProcessingEnvironment)
-: AbstractBindingClass(classPackage, className, targetClass, processingEnvironment) {
+  : AbstractBindingClass(classPackage, className, targetClass, processingEnvironment) {
 
   companion object {
     val CLASS_SUFFIX = "$\$FreightTrain"
@@ -28,46 +32,91 @@ class FreightTrainBindingClass(classPackage: String,
   }
 
   override fun generate(): TypeSpec {
-    return classType(PUBLIC, className) {
-      annotations = setOf(AnnotationSpec.builder(SuppressWarnings::class.java)
-                                  .addMember("value", "\$S", "unused")
-                                  .build())
-      parameterizedTypes.add(TypeVariableName.get("T", ClassName.get(classPackage, targetClass)))
-      implements.add(ParameterizedTypeName.get(ClassName.get("io.dwak.freight.internal", "IFreightTrain"),
-                                               TypeVariableName.get("T")))
+    val classBuilder = TypeSpec.classBuilder(className)
+        .addModifiers(PUBLIC)
+        .addAnnotation(AnnotationSpec.builder(SuppressWarnings::class.java)
+                           .addMember("value", "\$S", "unused")
+                           .build())
+        .addTypeVariable(TypeVariableName.get("T", ClassName.get(classPackage, targetClass)))
+        .addSuperinterface(ParameterizedTypeName.get(ClassName.get("io.dwak.freight.internal",
+                                                                   "IFreightTrain"),
+                                                     TypeVariableName.get("T")))
+    val shipBuilder = MethodSpec.methodBuilder(METHOD_NAME)
+        .addModifiers(PUBLIC)
+        .returns(VOID)
+        .addParameter(ParameterSpec.builder(TypeVariableName.get("T"), "target", FINAL).build())
+        .addAnnotation(AnnotationSpec.builder(Override::class.java).build())
+        .addAnnotation(AnnotationSpec.builder(SuppressWarnings::class.java)
+                           .addMember("value", "\$S", "unused")
+                           .build())
+        .addStatement("final \$T bundle = target.getArgs()", bundle)
 
-      method(PUBLIC, VOID, METHOD_NAME,
-             setOf(JavaPoetValue(FINAL, TypeVariableName.get("T"), "target"))) {
-        annotations = setOf(AnnotationSpec.builder(Override::class.java).build(),
-                            AnnotationSpec.builder(SuppressWarnings::class.java)
-                                    .addMember("value", "\$S", "unused")
-                                    .build())
-        statement("final \$T bundle = target.getArgs()", bundle)
+    bindings.values
+        .map { it as FieldBinding }
+        .forEach {
+          val (typeHandled, statement) = getBundleStatement(it)
+          if(it.kind == ElementKind.FIELD) {
+            if(!typeHandled){
+              shipBuilder.addStatement("target.\$L = (\$L) bundle.getSerializable(\"${it.key}\")",
+                                             it.name, it.type)
+            }
+            else {
+              shipBuilder.addStatement("target.\$L = \$L", it.name, statement)
+            }
+          }
+          else {
+            if(!typeHandled) {
+              shipBuilder.addStatement("target.\$L((\$L) bundle.getSerializable(\"${it.key}\"))",
+                                             it.name, it.type)
+            }
+            else {
+              shipBuilder.addStatement("target.\$L(\$L)", it.name, statement)
+            }
+          }
+        }
+    return classBuilder.addMethod(shipBuilder.build())
+        .build()
 
-
-        bindings.values
-                .map { it as FieldBinding }
-                .forEach {
-                  val (typeHandled, statement) = getBundleStatement(it)
-                  if (it.kind == ElementKind.FIELD) {
-                    if (!typeHandled) {
-                      statement("target.\$L = (\$L) bundle.getSerializable(\"${it.key}\")", it.name, it.type)
-                    }
-                    else {
-                      statement("target.\$L = \$L", it.name, statement)
-                    }
-                  }
-                  else {
-                    if (!typeHandled) {
-                      statement("target.\$L((\$L) bundle.getSerializable(\"${it.key}\"))", it.name, it.type)
-                    }
-                    else {
-                      statement("target.\$L(\$L)", it.name, statement)
-                    }
-                  }
-                }
-      }
-    }
+//    return classType(PUBLIC, className) {
+//      annotations = setOf(AnnotationSpec.builder(SuppressWarnings::class.java)
+//                              .addMember("value", "\$S", "unused")
+//                              .build())
+//      parameterizedTypes.add(TypeVariableName.get("T", ClassName.get(classPackage, targetClass)))
+//      implements.add(ParameterizedTypeName.get(ClassName.get("io.dwak.freight.internal", "IFreightTrain"),
+//                                               TypeVariableName.get("T")))
+//
+//      method(PUBLIC, VOID, METHOD_NAME,
+//             setOf(JavaPoetValue(FINAL, TypeVariableName.get("T"), "target"))) {
+//        annotations = setOf(AnnotationSpec.builder(Override::class.java).build(),
+//                            AnnotationSpec.builder(SuppressWarnings::class.java)
+//                                .addMember("value", "\$S", "unused")
+//                                .build())
+//        statement("final \$T bundle = target.getArgs()", bundle)
+//
+//
+//        bindings.values
+//            .map { it as FieldBinding }
+//            .forEach {
+//              val (typeHandled, statement) = getBundleStatement(it)
+//              if (it.kind == ElementKind.FIELD) {
+//                if (!typeHandled) {
+//                  statement("target.\$L = (\$L) bundle.getSerializable(\"${it.key}\")", it.name, it.type)
+//                }
+//                else {
+//                  statement("target.\$L = \$L", it.name, statement)
+//                }
+//              }
+//              else {
+//                if (!typeHandled) {
+//                  statement("target.\$L((\$L) bundle.getSerializable(\"${it.key}\"))", it.name, it.type)
+//                }
+//                else {
+//                  statement("target.\$L(\$L)", it.name, statement)
+//                }
+//              }
+//            }
+//      }
+//    }
   }
 
   private fun getBundleStatement(fieldBinding: FieldBinding): Pair<Boolean, String> {

@@ -7,14 +7,13 @@ import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.ParameterSpec
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
-import com.vishnurajeevan.javapoet.dsl.classType
-import com.vishnurajeevan.javapoet.dsl.model.JavaPoetValue
 import io.dwak.freight.processor.model.ClassBinding
 import io.dwak.freight.processor.model.FieldBinding
-import java.lang.invoke.MethodHandleProxies
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Element
-import javax.lang.model.element.Modifier.*
+import javax.lang.model.element.Modifier.FINAL
+import javax.lang.model.element.Modifier.PRIVATE
+import javax.lang.model.element.Modifier.PUBLIC
 
 class BuilderBindingClass(classPackage: String,
                           className: String,

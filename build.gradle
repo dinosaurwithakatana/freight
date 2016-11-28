@@ -48,7 +48,6 @@ ext {
     conductor = "com.bluelinelabs:conductor:2.0.1"
 
     javaPoet = "com.squareup:javapoet:1.7.0"
-    javaPoetDsl = "io.dwak:javapoet-kotlin-dsl:0.1-SNAPSHOT"
 
     junit = "junit:junit:4.12"
 
