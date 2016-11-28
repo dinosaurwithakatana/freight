@@ -22,7 +22,7 @@ class NavigatorImplBindingClass(classPackage: String,
     val CLASS_SUFFIX = "Navigator"
   }
 
-  private var builderClasses = hashMapOf<String, ClassName>()
+  private val builderClasses = hashMapOf<String, ClassName>()
 
   override fun createAndAddBinding(element: Element) {
     val binding = ClassBinding(element)
@@ -31,7 +31,7 @@ class NavigatorImplBindingClass(classPackage: String,
 
   fun createAndAddBinding(element: TypeElement, builderClass: ClassName) {
     this.createAndAddBinding(element)
-    this.builderClasses.put(builderClass.simpleName(), builderClass)
+    builderClasses.put(builderClass.simpleName(), builderClass)
   }
 
   override fun generate(): TypeSpec {
