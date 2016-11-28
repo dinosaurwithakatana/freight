@@ -1,5 +1,8 @@
 package io.dwak.freight.processor
 
+import com.google.testing.compile.CompilationSubject.assertThat
+import com.google.testing.compile.Compiler
+import com.google.testing.compile.Compiler.javac
 import com.google.testing.compile.JavaFileObjects
 import io.dwak.freight.util.processAndAssertEquals
 import org.junit.Test
@@ -219,6 +222,69 @@ class FreightProcessorNavigatorTest {
     processAndAssertEquals(listOf(freightNavigatorJavaSource, inputFile),
                            testNavigator to expectedInterfaceOutput,
                            freightMainNavigator to expectedFreightImplOutput)
+  }
+
+  @Test
+  fun singleControllerNoNameNoExtrasCustomScope() {
+    val inputFile
+        = JavaFileObjects.forSourceLines("test.TestController",
+                                         "package test;",
+                                         "import com.bluelinelabs.conductor.Controller;",
+                                         "import io.dwak.freight.annotation.ControllerBuilder;",
+                                         "import android.support.annotation.NonNull;",
+                                         "import android.support.annotation.Nullable;",
+                                         "import android.view.LayoutInflater;",
+                                         "import android.view.View;",
+                                         "import android.view.ViewGroup;",
+                                         "@ControllerBuilder(scope = \"Test\")",
+                                         "public class TestController extends Controller {",
+                                         "",
+                                         "  @NonNull",
+                                         "  @Override",
+                                         "  protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {",
+                                         "    return null;",
+                                         "  }",
+                                         "}")
+
+    val testNavigator = "$NAVIGATOR_PACKAGE.test.TestNavigator"
+    val expectedInterfaceOutput
+        = JavaFileObjects.forSourceLines(testNavigator,
+                                         "package $NAVIGATOR_PACKAGE.test;",
+                                         "",
+                                         "import io.dwak.freight.Navigator;",
+                                         "",
+                                         "public interface TestNavigator extends Navigator {",
+                                         "  void goToTest();",
+                                         "}")
+    val freightMainNavigator = "$NAVIGATOR_PACKAGE.test.Freight_TestNavigator"
+    val expectedFreightImplOutput
+        = JavaFileObjects.forSourceLines(freightMainNavigator,
+                                         "package $NAVIGATOR_PACKAGE.test;",
+                                         "import com.bluelinelabs.conductor.Router;",
+                                         "import com.bluelinelabs.conductor.RouterTransaction;",
+                                         "import io.dwak.freight.internal.FreightNavigator;",
+                                         "import java.lang.Override;",
+                                         "import test.TestControllerBuilder;",
+                                         "public class Freight_TestNavigator extends FreightNavigator implements TestNavigator {",
+                                         "  public Freight_TestNavigator(Router router) {",
+                                         "    super(router);",
+                                         "  }",
+                                         "  @Override",
+                                         "  public void goToTest() {",
+                                         "    final TestControllerBuilder builder = new TestControllerBuilder();",
+                                         "    RouterTransaction rt = builder.asTransaction()",
+                                         "        .tag(\"Test\");",
+                                         "    router.pushController(rt);",
+                                         "  }",
+                                         "}")
+
+    val compilation = javac()
+        .withProcessors(FreightProcessor())
+        .withOptions("-Xlint:-processing")
+        .compile(inputFile)
+
+    assertThat(compilation).succeeded()
+    assertThat(compilation).hadWarningContaining("needs a screen name value")
   }
 
   @Test

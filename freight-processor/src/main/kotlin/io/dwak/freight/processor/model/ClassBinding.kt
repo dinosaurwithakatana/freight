@@ -36,22 +36,24 @@ class ClassBinding(element: Element) : Binding {
             .forEach { enclosedExtras.add(it) }
   }
 
-  private fun getPopChangeHandler(annotation: ControllerBuilder): TypeMirror? {
-    try {
-      annotation.popChangeHandler // this should throw
-    } catch (mte: MirroredTypeException) {
-      return mte.typeMirror
+  companion object {
+    fun getPopChangeHandler(annotation: ControllerBuilder): TypeMirror? {
+      try {
+        annotation.popChangeHandler // this should throw
+      } catch (mte: MirroredTypeException) {
+        return mte.typeMirror
+      }
+      return null
     }
-    return null
-  }
 
-  private fun getPushChangeHandler(annotation: ControllerBuilder): TypeMirror? {
-    try {
-      annotation.pushChangeHandler // this should throw
-    } catch (mte: MirroredTypeException) {
-      return mte.typeMirror
+    fun getPushChangeHandler(annotation: ControllerBuilder): TypeMirror? {
+      try {
+        annotation.pushChangeHandler // this should throw
+      } catch (mte: MirroredTypeException) {
+        return mte.typeMirror
+      }
+      return null
     }
-    return null
   }
 
 }
