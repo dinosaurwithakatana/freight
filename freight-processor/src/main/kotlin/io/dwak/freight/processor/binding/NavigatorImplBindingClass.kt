@@ -87,14 +87,13 @@ class NavigatorImplBindingClass(classPackage: String,
           val controllerChangeHandler = processingEnvironment
               .getTypeMirror("com.bluelinelabs.conductor.ControllerChangeHandler")
 
-          val voidType = processingEnvironment
-              .getTypeMirror("java.lang.Void")
+          val voidType = processingEnvironment.getTypeMirror("java.lang.Void")
           binding.popChangeHandler?.let {
             if (typeUtils.isSameType(it, voidType)) {
               return@let
             }
-            if(!typeUtils.isSubtype(it, controllerChangeHandler)) {
-              error("PopChangeHandler must be of type ControllerChangeHandler. Is $it")
+            error(!typeUtils.isSubtype(it, controllerChangeHandler)) {
+              "PopChangeHandler must be of type ControllerChangeHandler. Is $it"
             }
             methodBuilder.addStatement("rt.popChangeHandler(new \$T())", it)
           }
@@ -103,8 +102,8 @@ class NavigatorImplBindingClass(classPackage: String,
             if (typeUtils.isSameType(it, voidType)) {
               return@let
             }
-            if(!typeUtils.isSubtype(it, controllerChangeHandler)) {
-              error("PushChangeHandler must be of type ControllerChangeHandler. Is $it")
+            error(!typeUtils.isSubtype(it, controllerChangeHandler)) {
+              "PushChangeHandler must be of type ControllerChangeHandler. Is $it"
             }
             methodBuilder.addStatement("rt.pushChangeHandler(new \$T())", it)
           }
