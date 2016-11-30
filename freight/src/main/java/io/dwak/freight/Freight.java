@@ -15,6 +15,10 @@ public final class Freight {
   public static final String JAVA_PREFIX = "java.";
   private static final Map<Class<?>, IFreightTrain> FREIGHT_TRAINS = new LinkedHashMap<>();
 
+  /**
+   * Used to ship values into {@link io.dwak.freight.annotation.Extra} annotated fields
+   * @param target class to ship into
+     */
   public static void ship(Object target) {
     final Class<?> targetClass = target.getClass();
 
