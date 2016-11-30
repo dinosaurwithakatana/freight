@@ -61,9 +61,9 @@ Freight can generate scoped navigators for use outside of the main controller.
 
 ```java
 @ControllerBuilder(value = "Login",
-                            scope = "Welcome",
-                            popChangeHandler = FadeChangeHandler.class,
-                            pushChangeHandler = FadeChangeHandler.class)
+                   scope = "Welcome",
+                   popChangeHandler = FadeChangeHandler.class,
+                   pushChangeHandler = FadeChangeHandler.class)
 public class LoginController {
     @Extra String username;
     @Nullable @Extra String password;
@@ -83,7 +83,7 @@ public interface WelcomeNavigator extends Navigator {
 as well as an implementation handling the changes via conductor's router.
 
 ```java
-public class Freight_WelcomeNavigator implements WelcomeNavigator {
+public class Freight_WelcomeNavigator extends FreightNavigator implements WelcomeNavigator {
   private final Router router;
 
   public Freight_WelcomeNavigator(Router router) {
@@ -134,8 +134,8 @@ buildscript {
 apply plugin: 'com.neenbedankt.android-apt'
 
 dependencies {
-    apt 'io.dwak:freight-processor:0.5-SNAPSHOT'
-    compile 'io.dwak:freight:0.5-SNAPSHOT'
+    apt 'io.dwak:freight-processor:0.7-SNAPSHOT'
+    compile 'io.dwak:freight:0.7-SNAPSHOT'
 }
 ```
 
