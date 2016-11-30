@@ -64,10 +64,13 @@ Freight can generate scoped navigators for use outside of the main controller.
                    scope = "Welcome",
                    popChangeHandler = FadeChangeHandler.class,
                    pushChangeHandler = FadeChangeHandler.class)
-public class LoginController {
+public class LoginController extends Controller {
     @Extra String username;
     @Nullable @Extra String password;
 
+    public LoginController(Bundle bundle){
+        super(bundle);
+    }
 
 }
 ```
