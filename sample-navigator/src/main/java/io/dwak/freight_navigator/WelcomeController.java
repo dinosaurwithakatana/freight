@@ -14,6 +14,7 @@ import io.dwak.freight.annotation.ControllerBuilder;
 
 @ControllerBuilder(value = "WelcomeScreen",
         scope = "Welcome",
+        popChangeHandler = FadeChangeHandler.class,
         pushChangeHandler = FadeChangeHandler.class)
 public class WelcomeController extends Controller {
     public WelcomeController() {
