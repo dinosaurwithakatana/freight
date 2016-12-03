@@ -15,7 +15,7 @@ class MainController(bundle : Bundle) : Controller(bundle) {
   var number : Int? = null @Nullable @Extra set
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
-    throw UnsupportedOperationException()
+    return inflater.inflate(R.layout.controller_main, container, false)
   }
 
 }
