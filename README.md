@@ -99,6 +99,8 @@ public class Freight_WelcomeNavigator extends FreightNavigator implements Welcom
     builder.password(password);
     RouterTransaction rt = builder.asTransaction()
         .tag("Login");
+    rt.popChangeHandler(new FadeChangeHandler());
+    rt.pushChangeHandler(new FadeChangeHandler());
     router.pushController(rt);
   }
 }
