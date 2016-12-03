@@ -45,7 +45,7 @@ ext {
 
     compileTesting = "com.google.testing.compile:compile-testing:0.10"
 
-    conductor = "com.bluelinelabs:conductor:2.0.1"
+    conductor = "com.bluelinelabs:conductor:2.0.4"
 
     javaPoet = "com.squareup:javapoet:1.7.0"
 
